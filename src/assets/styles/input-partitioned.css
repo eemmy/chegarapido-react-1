@@ -1,0 +1,29 @@
+#input-partitioned {
+  outline: none;
+  font-size: 24px;
+  padding-left: 14px;
+  letter-spacing: 30px;
+  border: 0;
+  background-image: linear-gradient(
+    to left,
+    #ef4000 70%,
+    rgba(255, 255, 255, 0) 0%
+  );
+  background-position: bottom;
+  background-size: 43px 3px;
+  background-repeat: repeat-x;
+  background-position-x: 35px;
+  width: 300px;
+  min-width: 300px;
+}
+
+#input-partitioned-inner {
+  left: 0;
+  position: sticky;
+}
+
+#input-partitioned-outer {
+  width: 263px;
+  overflow: hidden;
+  margin: 0 auto;
+}

@@ -1,24 +1,77 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+
+import Register from "./pages/Register";
+import RegisterDeliveryman from "./pages/RegisterDeliveryman";
+import RegisterFranchised from "./pages/RegisterFranchised";
+import RegisterEstablishments from "./pages/RegisterEstablishments";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import MyRequests from "./pages/MyRequests";
+import Favorites from "./pages/Favorites";
+import MyAddress from "./pages/MyAddress";
+import MyAccount from "./pages/MyAccount";
+import Payment from "./pages/Payment";
+import Wallet from "./pages/Wallet";
+import ForgotPassword from "./pages/ForgotPassword";
+import Establishments from "./pages/Establishments";
+import EstablishmentsOpen from "./pages/EstablishmentsOpen";
+import EstablishmentsClose from "./pages/EstablishmentsClose";
+
+function RequireAuth({ children }) {
+  let { signed } = useAuth();
+  let location = useLocation();
+
+  if (!signed()) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/registerdeliveryman"
+            element={<RegisterDeliveryman />}
+          />
+          <Route
+            path="/registerfranchised"
+            element={<RegisterFranchised />}
+          />
+          <Route
+            path="/registerestablishment"
+            element={<RegisterEstablishments />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/myrequests" element={<MyRequests />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/myaddress" element={<MyAddress />} />
+          <Route path="/myaccount" element={<MyAccount />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/establishments" element={<Establishments />} />
+          <Route path="/establishmentsopen" element={<EstablishmentsOpen />} />
+          <Route
+            path="/establishmentsclose"
+            element={<EstablishmentsClose />}
+          />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
