@@ -5,7 +5,13 @@ function SelectAddress({ hidden, closeModal }) {
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
       tabIndex="-1"
-      style={{ position: "absolute", width: "100%", height: "100%" }}
+      style={{
+        position: "fixed",
+        width: "100%",
+        height: "100%",
+        zIndex: 19,
+        overflow: "auto",
+      }}
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">

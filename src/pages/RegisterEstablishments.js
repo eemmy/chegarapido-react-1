@@ -1,4 +1,10 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+
+import Header from '../components/Header';
+
 function RegisterEstablishments() {
+  const [showSidebar, setShowSidebar] = useState(false);
   return (
     <div>
       <a
@@ -47,150 +53,146 @@ function RegisterEstablishments() {
         Express
       </button>
 
-      <div
-        className="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasMenu"
-        aria-labelledby="offcanvasMenuLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasMenuLabel">
-            <img src="./assets/images/logo.png" alt="Logo" />
-          </h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fechar"
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <p className="my-4">
-            Olá, <span className="text-primary">convidado!</span>
-          </p>
+      {showSidebar ? (
+        <div
+          className=""
+          style={{
+            position: "absolute",
+            backgroundColor: "white",
+            height: "100vh",
+            width: "400px",
+            zIndex: "90000",
+          }}
+        >
+          <div
+            className="offcanvas-header"
+            style={{
+              backgrounColor: "white",
+            }}
+          >
+            <h5 className="offcanvas-title" id="offcanvasMenuLabel">
+              <img src="./assets/images/logo.png" alt="Logo" />
+            </h5>
+            <button
+              type="button"
+              className="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Fechar"
+              onClick={() => setShowSidebar(false)}
+            ></button>
+          </div>
+          <div className="offcanvas-body">
+            <div className="d-flex flex-column justify-content-between h-100">
+              <div>
+                <p className="my-4">
+                  Olá, <span className="text-primary">convidado!</span>
+                </p>
 
-          <ul className="list-unstyled mb-5">
-            <li className="mb-2">
-              <a
-                href="./estabelecimentos.html"
-                className="text-decoration-none text-black"
-              >
-                <img
-                  src="./assets/images/outline_storefront_black.png"
-                  alt=""
-                />
-                <span className="ms-2">Estabelecimentos</span>
-              </a>
+                <ul className="list-unstyled mb-5">
+                  <li className="mb-2">
+                    <Link
+                      to="/establishments"
+                      className="text-decoration-none text-black"
+                    >
+                      <img
+                        src="./assets/images/outline_storefront_black.png"
+                        alt=""
+                      />
+                      <span className="ms-2">Estabelecimentos</span>
+                    </Link>
 
-              <li className="mb-2">
-                <a href="#" className="text-decoration-none text-black">
-                  <img src="./assets/images/outline_forum_black.png" alt="" />
-                  <span className="ms-2">Sugerir estabelecimentos</span>
-                </a>
-              </li>
+                    <li className="mb-2">
+                      <a
+                        href="#"
+                        className="text-decoration-none text-black"
+                        disabled
+                      >
+                        <img
+                          src="./assets/images/outline_forum_black.png"
+                          alt=""
+                        />
+                        <span className="ms-2">Sugerir estabelecimentos</span>
+                      </a>
+                    </li>
 
-              <li>
-                <a href="#" className="text-decoration-none text-black">
-                  <img
-                    src="./assets/images/outline_local_mall_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Compre pelo site</span>
-                </a>
-              </li>
-            </li>
-          </ul>
+                    <li>
+                      <a href="#" className="text-decoration-none text-black">
+                        <img
+                          src="./assets/images/outline_local_mall_black.png"
+                          alt=""
+                        />
+                        <span className="ms-2">Compre pelo site</span>
+                      </a>
+                    </li>
+                  </li>
+                </ul>
 
-          <ul className="list-unstyled">
-            <li className="mb-2">
-              <a
-                href="./cadastro-entregador.html"
-                className="btn btn-primary rounded-pill w-100 text-start"
-              >
-                <img src="./assets/images/outline_delivery_dining.png" alt="" />
-                <span>Seja entregador</span>
-              </a>
-            </li>
+                <ul className="list-unstyled">
+                  <li className="mb-2">
+                    <Link
+                      to="/registerdeliveryman"
+                      className="btn btn-primary rounded-pill w-100 text-start"
+                    >
+                      <img
+                        src="./assets/images/outline_delivery_dining.png"
+                        alt=""
+                      />
+                      <span>Seja entregador</span>
+                    </Link>
+                  </li>
 
-            <li className="mb-2">
-              <a
-                href="./cadastro-estabelecimento.html"
-                className="btn btn-primary rounded-pill w-100 text-start"
-              >
-                <img src="./assets/images/outline_storefront.png" alt="" />
-                <span>Cadastre seu estabelecimento</span>
-              </a>
-            </li>
+                  <li className="mb-2">
+                    <Link
+                      to="/registerestablishment"
+                      className="btn btn-primary rounded-pill w-100 text-start"
+                    >
+                      <img
+                        src="./assets/images/outline_storefront.png"
+                        alt=""
+                      />
+                      <span>Cadastre seu estabelecimento</span>
+                    </Link>
+                  </li>
 
-            <li>
-              <a
-                href="./cadastro-franqueado.html"
-                className="btn btn-primary rounded-pill w-100 text-start"
-              >
-                <img src="./assets/images/outline_store_white.png" alt="" />
-                <span>Seja nosso franqueado</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <section id="hero">
-        <header>
-          <nav className="navbar navbar-expand-lg navbar-light bg-white py-4">
-            <div className="container">
-              <div className="d-flex align-items-center">
-                <button
-                  className="btn me-0 me-md-4"
-                  type="button"
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasMenu"
-                  aria-controls="offcanvasMenu"
-                >
-                  <img
-                    className="icon-menu-header"
-                    src="./assets/images/outline_menu.png"
-                    alt="Icon Menu"
-                  />
-                </button>
-                <a className="navbar-brand" href="index.html">
-                  <img
-                    className="logo-header"
-                    src="./assets/images/logo.png"
-                    alt="Chega Rápido"
-                  />
-                </a>
+                  <li className="mb-2">
+                    <Link
+                      to="/registerfranchised"
+                      className="btn btn-primary rounded-pill w-100 text-start"
+                    >
+                      <img
+                        src="./assets/images/outline_store_white.png"
+                        alt=""
+                      />
+                      <span>Seja nosso franqueado</span>
+                    </Link>
+                  </li>
+                </ul>
               </div>
 
-              <div className="d-flex">
-                <div className="d-none d-lg-block">
-                  <p className="text-primary mb-0">Entrega em:</p>
-                  <p className="text-gray-600 mb-0">
-                    <img src="./assets/images/outline_place.png" alt="" />
-                    Selecionar endereço
-                    <img src="./assets/images/outline_expand_more.png" alt="" />
-                  </p>
-                </div>
-
-                <div className="d-flex align-items-center ms-md-5 ms-0">
-                  <a
-                    href="./criar-conta.html"
-                    className="me-4 text-primary text-decoration-none d-none d-md-block"
-                  >
-                    Criar conta
-                  </a>
-
-                  <a
-                    href="./entrar.html"
-                    className="btn btn-primary btn-sm btn-md-lg rounded-pill py-1 px-3 py-md-2 px-md-4 shadow-lg text-white fs-6 fw-normal"
-                  >
-                    Entrar
-                  </a>
-                </div>
+              <div className="border-top pt-4 d-md-none">
+                <Link
+                  to="/login"
+                  className="btn btn-primary rounded-pill mb-2 w-100"
+                >
+                  Entrar
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn btn-outline-primary rounded-pill w-100"
+                >
+                  Criar uma conta
+                </Link>
               </div>
             </div>
-          </nav>
-        </header>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+
+
+      <section id="hero">
+        <Header setShowSidebar={setShowSidebar} />
 
         <div
           className="hero-content"

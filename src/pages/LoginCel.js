@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function ForgotPassword() {
+function LoginCel() {
   return (
     <div>
       <div id="login" className="min-vh-100">
@@ -8,9 +8,11 @@ function ForgotPassword() {
           <div className="row">
             <div className="d-none d-md-block col-md-6">
               <img
-                src="assets/images/logo.png"
+                src="./assets/images/logo.png"
                 className="mt-4"
-                style={{ marginBottom: "20vh" }}
+                style={{
+                  marginBottom: "20vh",
+                }}
               />
 
               <div>
@@ -21,7 +23,9 @@ function ForgotPassword() {
                 </h2>
                 <p
                   className="text-white opacity-75 mb-5"
-                  style={{ maxWidth: "540px" }}
+                  style={{
+                    maxWidth: "540px",
+                  }}
                 >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                   condimentum imperdiet quam, ut dignissim orci molestie sed.
@@ -53,30 +57,30 @@ function ForgotPassword() {
                 </Link>
 
                 <div className="mb-4 text-center">
-                  <h2>Esqueci minha senha</h2>
-                  <p className="text-gray-700">
-                    Digite seu email para recuperar sua senha
-                  </p>
+                  <h2>Entrar</h2>
+                  <p className="text-gray-700">Como deseja prosseguir?</p>
                 </div>
 
                 <form action="" className="w-100 mb-5">
                   <div className="input-group input-group-rounded-pill mb-4">
                     <span className="input-group-text">
                       <img
-                        src="./assets/images/outline_email.png"
+                        src="./assets/images/outline_phone_iphone.png"
                         width="30"
                         height="30"
                       />
                     </span>
                     <input
-                      type="text"
-                      placeholder="email@email.com.br"
+                      type="tel"
+                      placeholder="(99) 9 9999 9999"
                       className="form-control form-control-lg rounded-end"
                     />
                   </div>
 
                   <button
-                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#code-modal"
+                    type="button"
                     className="
                     btn btn-lg
                     rounded-pill
@@ -84,14 +88,20 @@ function ForgotPassword() {
                     shadow-lg
                     w-100
                     border
-                    bg-white
-                    text-black
+                    bg-black
+                    text-white
                   "
-                    style={{ borderColor: "#000 !important" }}
                   >
-                    Enviar link
+                    Enviar SMS
                   </button>
                 </form>
+
+                <Link
+                  to="/"
+                  className="text-decoration-none text-gray-700"
+                >
+                  Entrar como convidado
+                </Link>
               </div>
             </div>
           </div>
@@ -101,4 +111,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default LoginCel;

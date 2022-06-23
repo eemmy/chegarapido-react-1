@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 function RegisterPage() {
   const [form, setForm] = useState({});
 
   const { Register } = useAuth();
+  let navigate = useNavigate();
 
   const handleChange = ({ target }) => {
     setForm({ ...form, [target.name]: target.value });
@@ -14,6 +16,7 @@ function RegisterPage() {
     event.preventDefault();
 
     await Register(form);
+    navigate('/myaccount')
   };
 
   useEffect(() => {
@@ -57,8 +60,8 @@ function RegisterPage() {
                 position-relative
               "
               >
-                <a
-                  href="./entrar.html"
+                <Link
+                  to="/login"
                   className="position-absolute"
                   style={{
                     top: "50px",
@@ -69,7 +72,7 @@ function RegisterPage() {
                     src="./assets/images/outline_chevron_left_black.png"
                     alt=""
                   />
-                </a>
+                </Link>
 
                 <div className="mb-4 text-center">
                   <h2>Criar conta</h2>

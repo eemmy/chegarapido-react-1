@@ -1,27 +1,6 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../contexts/AuthContext";
-
-function LoginPage() {
-  const [form, setForm] = useState({});
-
-  const { Login } = useAuth();
-
-  const handleChange = ({ target }) => {
-    setForm({ ...form, [target.name]: target.value });
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    await Login(form, 'email');
-  };
-
-  useEffect(() => {
-    console.log(form);
-  }, [form]);
-
+function Login() {
   return (
     <div>
       <div id="login" className="min-vh-100">
@@ -29,11 +8,9 @@ function LoginPage() {
           <div className="row">
             <div className="d-none d-md-block col-md-6">
               <img
-                src="./assets/images/logo.png"
+                src="assets/images/logo.png"
                 className="mt-4"
-                style={{
-                  marginBottom: "20vh",
-                }}
+                style={{ marginBottom: "20vh" }}
               />
 
               <div>
@@ -44,9 +21,7 @@ function LoginPage() {
                 </h2>
                 <p
                   className="text-white opacity-75 mb-5"
-                  style={{
-                    maxWidth: "540px",
-                  }}
+                  style={{ maxWidth: "540px" }}
                 >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                   condimentum imperdiet quam, ut dignissim orci molestie sed.
@@ -63,124 +38,107 @@ function LoginPage() {
                 justify-content-center
                 align-items-center
                 p-5
-                position-relative
               "
               >
-                <a
-                  href="./entrar.html"
-                  className="position-absolute"
-                  style={{
-                    top: "50px",
-                    left: "50px",
-                  }}
-                >
-                  <img
-                    src="./assets/images/outline_chevron_left_black.png"
-                    alt=""
-                  />
-                </a>
-
                 <div className="mb-4 text-center">
                   <h2>Entrar</h2>
-                  <p className="text-gray-700">
-                    Digite seu email e sua senha para continuar!
-                  </p>
+                  <p className="text-gray-700">Como deseja prosseguir?</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="w-100 mb-5">
-                  <div className="input-group input-group-rounded-pill mb-3">
-                    <span className="input-group-text">
-                      <img
-                        src="./assets/images/outline_email.png"
-                        width="30"
-                        height="30"
-                      />
-                    </span>
-                    <input
-                      type="email"
-                      name="email"
-                      onChange={handleChange}
-                      placeholder="email@email.com.br"
-                      className="form-control form-control-lg rounded-end"
-                    />
-                  </div>
-
-                  <div className="input-group input-group-rounded-pill mb-3">
-                    <span className="input-group-text">
-                      <img
-                        src="./assets/images/outline_lock.png"
-                        width="30"
-                        height="30"
-                      />
-                    </span>
-                    <input
-                      type="password"
-                      name="password"
-                      onChange={handleChange}
-                      placeholder="***************"
-                      className="form-control form-control-lg rounded-end"
-                    />
-                  </div>
-
-                  <div className="d-flex justify-content-between align-items-center mb-5">
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        name="remember-password"
-                        id="remember-password"
-                        className="form-check-input"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="remember-password"
-                      >
-                        Lembrar-me.
-                      </label>
-                    </div>
-                    <a
-                      href="./esqueci-minha-senha.html"
-                      className="text-decoration-none text-black"
-                    >
-                      Esqueci minha senha
-                    </a>
-                  </div>
-
-                  <button
-                    type="submit"
+                <div className="w-100 gap-vertical-10">
+                  <Link
                     className="
                     btn btn-lg
+                    fs-6
                     rounded-pill
                     d-block
                     shadow-lg
                     w-100
                     border
-                    bg-white
-                    text-black
-                    mb-3
                   "
+                    to="/loginCel"
+                  >
+                    <img
+                      src="./assets/images/phone.png"
+                      alt="Entrar com o celular"
+                      width="30"
+                      height="30"
+                      className="me-2"
+                    />
+                    Entrar com o celular
+                  </Link>
+                  <Link
+                    className="
+                    btn btn-lg
+                    fs-6
+                    rounded-pill
+                    d-block
+                    shadow-lg
+                    w-100
+                    border
+                  "
+                    to="/loginEmail"
+                  >
+                    <img
+                      src="./assets/images/outline_email_black.png"
+                      alt="Entrar com o email"
+                      width="30"
+                      height="30"
+                      className="me-2"
+                    />
+                    Entrar com o email
+                  </Link>
+                  <button
+                    className="
+                    btn btn-lg
+                    fs-6
+                    rounded-pill
+                    d-block
+                    shadow-lg
+                    w-100
+                    border
+                    text-white
+                    disabled
+                  "
+                    to="#"
                     style={{
-                      borderColor: "#000 !important",
+                      backgroundColor: "#3b5998",
+                      borderColor: "#3b5998",
                     }}
                   >
-                    Entrar
+                    <img
+                      src="./assets/images/outline_facebook_white.png"
+                      alt="Entrar com o Facebook"
+                      width="30"
+                      height="30"
+                      className="me-2"
+                    />
+                    Entrar com o Facebook
                   </button>
-
-                  <Link
-                    to="/register"
+                  <button
                     className="
                     btn btn-lg
+                    fs-6
                     rounded-pill
                     d-block
                     shadow-lg
                     w-100
                     border
-                    bg-black
-                    text-white
+                    disabled
                   "
+                    to="#"
                   >
-                    Criar uma conta
+                    <img
+                      src="./assets/images/logo-google.png"
+                      alt="Entrar com o Google"
+                      className="me-2"
+                    />
+                    Entrar com o Google
+                  </button>
+                  <Link className="btn btn-lg fs-6 b-block w-100" to="/">
+                    Entrar como convidado
                   </Link>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -190,4 +148,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default Login;

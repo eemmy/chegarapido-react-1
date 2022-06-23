@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import SidebarCoupon from "../components/SidebarCoupon";
+import SidebarCart from "../components/SidebarCart";
+
 function Home() {
   const [search, setSearch] = useState("");
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebarCoupon, setShowSidebarCoupon] = useState(false);
+  const [showSidebarCart, setShowSidebarCart] = useState(false);
 
   const handleSearch = async () => {
     const response = api.get(
@@ -17,11 +25,17 @@ function Home() {
     handleSearch();
   }, [search]);
 
+  //useEffect(() => {
+  //setShowSidebar(false);
+  //}, [])
 
   return (
-    <div>
-      <a
-        href="/"
+    <div
+      style={{
+        position: "relative",
+      }}
+    >
+      <button
         className="btn btn-primary text-white d-none d-md-block"
         style={{
           position: "fixed",
@@ -32,13 +46,11 @@ function Home() {
           borderEndStartRadius: "0",
           zIndex: "10",
         }}
-        data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasCoupon"
-        aria-controls="offcanvasCoupon"
+        onClick={() => setShowSidebarCoupon(true)}
       >
         <img src="./assets/images/outline_confirmation_number.png" alt="" />
         Cupons
-      </a>
+      </button>
 
       <button
         type="button"
@@ -47,6 +59,7 @@ function Home() {
         data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasCart"
         aria-controls="offcanvasCart"
+        onClick={() => setShowSidebarCart(true)}
       >
         <img src="./assets/images/outline_shopping_cart.png" alt="" />
       </button>
@@ -211,106 +224,6 @@ function Home() {
           <a href="./pagamento.html" className="btn w-100 btn-black-pill mt-5">
             Ir para pagamento
           </a>
-        </div>
-      </div>
-
-      <div
-        className="offcanvas offcanvas-start shadow-lg"
-        tabIndex="-1"
-        id="offcanvasCoupon"
-        aria-labelledby="offcanvasCouponLabel"
-      >
-        <div className="offcanvas-header">
-          <h4 className="text-primary" id="offcanvasCouponLabel">
-            Cupons
-          </h4>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <p
-            className="fs-14 border-bottom pb-2"
-            style={{ borderColor: "#ebebeb" }}
-          >
-            Disponíveis
-          </p>
-
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <img
-                src="./assets/images/outline_confirmation_number_black.png"
-                width="42"
-                height="42"
-              />
-            </div>
-
-            <div>
-              <h5 className="fw-bold mb-1">Cupom</h5>
-              <p className="mb-1 fs-7 text-gray-700 mb-0">
-                Insira o código do cupom:
-              </p>
-              <p className="text-primary">XXUTY5</p>
-            </div>
-
-            <button className="btn btn-outline-primary">Resgatar cupom</button>
-          </div>
-
-          <p
-            className="fs-14 border-bottom pb-2"
-            style={{ borderColor: "#ebebeb" }}
-          >
-            Utilizados
-          </p>
-
-          <div className="d-flex justify-content-between align-items-center opacity-25">
-            <div>
-              <img
-                src="./assets/images/outline_confirmation_number_black.png"
-                width="42"
-                height="42"
-              />
-            </div>
-
-            <div>
-              <h5 className="fw-bold mb-1">Cupom</h5>
-              <p className="mb-1 fs-7 text-gray-700 mb-0">
-                Insira o código do cupom:
-              </p>
-              <p className="text-primary">XXUTY5</p>
-            </div>
-
-            <button className="btn btn-outline-primary">Resgatar cupom</button>
-          </div>
-
-          <p
-            className="fs-14 border-bottom pb-2"
-            style={{ borderColor: "#ebebeb" }}
-          >
-            Expirados
-          </p>
-          <div className="d-flex justify-content-between align-items-center opacity-25">
-            <div>
-              <img
-                src="./assets/images/outline_confirmation_number_black.png"
-                width="42"
-                height="42"
-              />
-            </div>
-
-            <div>
-              <h5 className="fw-bold mb-1">Cupom</h5>
-              <p className="mb-1 fs-7 text-gray-700 mb-0">
-                Insira o código do cupom:
-              </p>
-              <p className="text-primary">XXUTY5</p>
-            </div>
-
-            <button className="btn btn-outline-primary">Resgatar cupom</button>
-          </div>
         </div>
       </div>
 
@@ -606,171 +519,6 @@ function Home() {
         </div>
       </div>
 
-      {/* 
-  <!-- Cupons -->
-  <!-- <div className="offcanvas offcanvas-end shadow-lg" tabIndex="-1" id="offcanvasCoupon"
-   aria-labelledby="offcanvasCouponLabel">
-   <div className="offcanvas-header">
-     <h6 id="offcanvasCouponLabel">Cupons</h6>
-     <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-   </div>
-   <div className="offcanvas-body">
-     <div className="d-flex justify-content-between align-items-center mb-5">
-       <input type="text" placeholder="Código do Cupom" className="flex-1 form-control rounded-pill me-2"
-         style={{ backgroundColor:"#F5F5F5", }}>
-
-       <button className="btn btn-primary rounded-pill">Adicionar</button>
-     </div>
-
-     <ul className="nav app-nav-tabs" role="tablist">
-       <li className="app-nav-item" role="presentation">
-         <button className="app-nav-link active" aria-current="page" id="coupons-available-tab" data-bs-toggle="tab"
-           data-bs-target="#coupons-available" type="button" role="tab" aria-controls="coupons-available"
-           aria-selected="true">Disponíveis</button>
-       </li>
-       <li className="app-nav-item" role="presentation">
-         <button className="app-nav-link" id="expired-coupons-tab" data-bs-toggle="tab" data-bs-target="#expired-coupons"
-           type="button" role="tab" aria-controls="expired-coupons" aria-selected="false">Expirados</button>
-       </li>
-     </ul>
-
-     <div className="tab-content mt-2">
-       <div className="tab-pane fade show active" id="coupons-available" role="tabpanel"
-         aria-labelledby="coupons-available-tab">
-         <div className="d-flex justify-content-between align-items-center py-3">
-           <div className="d-flex flex-1 me-3">
-             <div className="ratio ratio-1x1 flex-shrink-0" style={{ width:"54px", height:"54px", }}>
-               <img src="./assets/images/outline_confirmation_number_black.png" width="54" height="54">
-             </div>
-             <div className="flex-1">
-               <h5 className="fw-bold text-primary mb-1">Cupom</h5>
-               <p className="mb-1 fs-7 text-gray-700">Insira o código do cupom:</p>
-               <p className="text-primary">XXUTY5</p>
-
-               <div className="collapse" id="couponMoreInfo1">
-                 <p className="text-gray-700">Garanta antes que acabe!</p>
-
-                 <p className="text-gray-700 fs-7">
-                   <span className="text-black">Estabelecimento:</span> Todos os estabelecimentos <br />
-                   <span className="text-black">Data de validade:</span> Até 04/08/2021 às 19:22 <br />
-                   <span className="text-black">Modo de usar:</span> Adicione o cupom no momento de finalização do pedido.
-                   <br />
-                   <span className="text-black">Forma de pagamento:</span> Pague na entrega, pelo app ou retire no
-                   estabelecimento. <br />
-                   <span className="text-black">Limite de uso:</span>Limite de uso: 1 vez por usuário. <br />
-
-                 </p>
-               </div>
-
-               <div className="d-flex justify-content-between mt-2">
-
-                 <a className="btn-coupon-more-info me-3 fs-7 text-primary text-decoration-none" data-bs-toggle="collapse"
-                   href="#couponMoreInfo1" role="button" aria-expanded="false" aria-controls="couponMoreInfo1">
-
-                 </a>
-
-                 <p className="text-end fs-7">
-                   Válido até <br /> 04/08/2021 às 19:22
-                 </p>
-               </div>
-             </div>
-           </div>
-
-           <input type="radio" className="form-check-input" name="coupon" />
-         </div>
-
-         <hr />
-
-         <div className="d-flex justify-content-between align-items-center py-3">
-           <div className="d-flex flex-1 me-3">
-             <div className="ratio ratio-1x1 flex-shrink-0" style={{ width:"54px", height:"54px", }}>
-               <img src="./assets/images/outline_confirmation_number_black.png" width="54" height="54" />
-             </div>
-             <div className="flex-1">
-               <h5 className="fw-bold text-primary mb-1">Cupom</h5>
-               <p className="mb-1 fs-7 text-gray-700">Insira o código do cupom:</p>
-               <p className="text-primary">XXUTY5</p>
-
-               <div className="collapse" id="couponMoreInfo2">
-                 <p className="text-gray-700">Garanta antes que acabe!</p>
-
-                 <p className="text-gray-700 fs-7">
-                   <span className="text-black">Estabelecimento:</span> Todos os estabelecimentos <br />
-                   <span className="text-black">Data de validade:</span> Até 04/08/2021 às 19:22 <br />
-                   <span className="text-black">Modo de usar:</span> Adicione o cupom no momento de finalização do pedido.
-                   <br />
-                   <span className="text-black">Forma de pagamento:</span> Pague na entrega, pelo app ou retire no
-                   estabelecimento. <br />
-                   <span className="text-black">Limite de uso:</span>Limite de uso: 1 vez por usuário. <br />
-
-                 </p>
-               </div>
-
-               <div className="d-flex justify-content-between mt-2">
-
-                 <a className="btn-coupon-more-info me-3 fs-7 text-primary text-decoration-none" data-bs-toggle="collapse"
-                   href="#couponMoreInfo2" role="button" aria-expanded="false" aria-controls="couponMoreInfo2">
-
-                 </a>
-
-                 <p className="text-end fs-7">
-                   Válido até <br /> 04/08/2021 às 19:22
-                 </p>
-               </div>
-             </div>
-           </div>
-
-           <input type="radio" className="form-check-input" name="coupon" />
-         </div>
-       </div>
-       <div className="tab-pane fade" id="expired-coupons" role="tabpanel" aria-labelledby="expired-coupons-tab">
-         <div className="d-flex justify-content-between align-items-center py-3 opacity-25">
-           <div className="d-flex flex-1 me-3">
-             <div className="ratio ratio-1x1 flex-shrink-0" style={{ width:"54px", height:"54px", }}>
-               <img src="./assets/images/outline_confirmation_number_black.png" width="54" height="54" />
-             </div>
-             <div className="flex-1">
-               <h5 className="fw-bold text-primary mb-1">Cupom</h5>
-               <p className="mb-1 fs-7 text-gray-700">Insira o código do cupom:</p>
-               <p className="text-primary">XXUTY5</p>
-
-               <div className="collapse" id="couponMoreInfo2">
-                 <p className="text-gray-700">Garanta antes que acabe!</p>
-
-                 <p className="text-gray-700 fs-7">
-                   <span className="text-black">Estabelecimento:</span> Todos os estabelecimentos <br />
-                   <span className="text-black">Data de validade:</span> Até 04/08/2021 às 19:22 <br />
-                   <span className="text-black">Modo de usar:</span> Adicione o cupom no momento de finalização do pedido.
-                   <br />
-                   <span className="text-black">Forma de pagamento:</span> Pague na entrega, pelo app ou retire no
-                   estabelecimento. <br />
-                   <span className="text-black">Limite de uso:</span>Limite de uso: 1 vez por usuário. <br />
-
-                 </p>
-               </div>
-
-               <div className="d-flex justify-content-between mt-2">
-
-                 <a className="btn-coupon-more-info me-3 fs-7 text-primary text-decoration-none" data-bs-toggle="collapse"
-                   href="#couponMoreInfo2" role="button" aria-expanded="false" aria-controls="couponMoreInfo2">
-
-                 </a>
-
-                 <p className="text-end fs-7">
-                   Válido até <br /> 04/08/2021 às 19:22
-                 </p>
-               </div>
-             </div>
-           </div>
-
-    <input type="radio" className="form-check-input" name="coupon" disabled />
-         </div>
-       </div>
-     </div>
-   </div>
- </div> -->
-      */}
-
       <div
         className="modal"
         id="select-address-modal"
@@ -1025,180 +773,22 @@ function Home() {
         </div>
       </div>
 
-      <div
-        className="offcanvas offcanvas-start"
-        tabIndex="-1"
-        id="offcanvasMenu"
-        aria-labelledby="offcanvasMenuLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasMenuLabel">
-            <img src="./assets/images/logo.png" alt="Logo" />
-          </h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fechar"
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <div className="d-flex flex-column justify-content-between h-100">
-            <div>
-              <p className="my-4">
-                Olá, <span className="text-primary">convidado!</span>
-              </p>
+      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} /> : ""}
 
-              <ul className="list-unstyled mb-5">
-                <li className="mb-2">
-                  <a
-                    href="./estabelecimentos.html"
-                    className="text-decoration-none text-black"
-                  >
-                    <img
-                      src="./assets/images/outline_storefront_black.png"
-                      alt=""
-                    />
-                    <span className="ms-2">Estabelecimentos</span>
-                  </a>
+      {showSidebarCoupon ? (
+        <SidebarCoupon setShowSidebar={setShowSidebarCoupon} />
+      ) : (
+        ""
+      )}
 
-                  <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-black">
-                      <img
-                        src="./assets/images/outline_forum_black.png"
-                        alt=""
-                      />
-                      <span className="ms-2">Sugerir estabelecimentos</span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="#" className="text-decoration-none text-black">
-                      <img
-                        src="./assets/images/outline_local_mall_black.png"
-                        alt=""
-                      />
-                      <span className="ms-2">Compre pelo site</span>
-                    </a>
-                  </li>
-                </li>
-              </ul>
-
-              <ul className="list-unstyled">
-                <li className="mb-2">
-                  <a
-                    href="./cadastro-entregador.html"
-                    className="btn btn-primary rounded-pill w-100 text-start"
-                  >
-                    <img
-                      src="./assets/images/outline_delivery_dining.png"
-                      alt=""
-                    />
-                    <span>Seja entregador</span>
-                  </a>
-                </li>
-
-                <li className="mb-2">
-                  <a
-                    href="./cadastro-estabelecimento.html"
-                    className="btn btn-primary rounded-pill w-100 text-start"
-                  >
-                    <img src="./assets/images/outline_storefront.png" alt="" />
-                    <span>Cadastre seu estabelecimento</span>
-                  </a>
-                </li>
-
-                <li className="mb-2">
-                  <a
-                    href="./cadastro-franqueado.html"
-                    className="btn btn-primary rounded-pill w-100 text-start"
-                  >
-                    <img src="./assets/images/outline_store_white.png" alt="" />
-                    <span>Seja nosso franqueado</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="border-top pt-4 d-md-none">
-              <Link
-                to="/login"
-                className="btn btn-primary rounded-pill mb-2 w-100"
-              >
-                Entrar
-              </Link>
-              <Link
-                to="/register"
-                className="btn btn-outline-primary rounded-pill w-100"
-              >
-                Criar uma conta
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      {showSidebarCart ? (
+        <SidebarCart setShowSidebar={setShowSidebarCart} />
+      ) : (
+        ""
+      )}
 
       <section id="hero">
-        <header>
-          <nav className="navbar navbar-expand-lg navbar-light bg-white py-4">
-            <div className="container">
-              <div className="d-flex align-items-center">
-                <button
-                  className="btn me-0 me-md-4"
-                  type="button"
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasMenu"
-                  aria-controls="offcanvasMenu"
-                >
-                  <img
-                    className="icon-menu-header"
-                    src="./assets/images/outline_menu.png"
-                    alt="Icon Menu"
-                  />
-                </button>
-                <a className="navbar-brand" href="index.html">
-                  <img
-                    className="logo-header"
-                    src="./assets/images/logo.png"
-                    alt="Chega Rápido"
-                  />
-                </a>
-              </div>
-
-              <div className="d-flex">
-                <div className="d-none d-lg-block">
-                  <p className="text-primary mb-0">Entrega em:</p>
-                  <button
-                    className="btn px-0 text-gray-600 mb-0 btn btn-primary"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#select-address-modal"
-                  >
-                    <img src="./assets/images/outline_place.png" alt="" />
-                    Selecionar endereço
-                    <img src="./assets/images/outline_expand_more.png" alt="" />
-                  </button>
-                </div>
-
-                <div className="d-flex align-items-center ms-md-5 ms-0">
-                  <Link
-                    to="/register"
-                    className="me-4 text-primary text-decoration-none d-none d-md-block"
-                  >
-                    Criar conta
-                  </Link>
-
-                  <Link
-                    to="/login"
-                    className="btn btn-primary btn-sm btn-md-lg rounded-pill py-1 px-3 py-md-2 px-md-4 shadow-lg text-white fs-6 fw-normal"
-                  >
-                    Entrar
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </header>
+        <Header setShowSidebar={setShowSidebar} />
 
         <div
           className="hero-content"

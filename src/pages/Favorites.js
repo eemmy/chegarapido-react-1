@@ -1,4 +1,13 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import Header from "../components/Header";
+import MenuAccount from "../components/MenuAccount";
+import Sidebar from '../components/Sidebar'
+
 function Favorites() {
+  const [showSidebar, setShowSidebar] = useState(false);
+
   return (
     <div>
       <div
@@ -232,203 +241,14 @@ function Favorites() {
         Express
       </button>
 
-      <div
-        className="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasMenu"
-        aria-labelledby="offcanvasMenuLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasMenuLabel">
-            <img src="./assets/images/logo.png" alt="Logo" />
-          </h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fechar"
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <p className="my-5">
-            Olá, <span className="text-primary">Welison!</span>
-          </p>
+      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
 
-          <ul className="list-unstyled mb-5">
-            <li className="mb-2">
-              <a
-                href="./index.html"
-                className="text-decoration-none text-black"
-              >
-                <img src="./assets/images/outline_home_black.png" alt="" />
-                <span className="ms-2">Home</span>
-              </a>
-
-              <li className="mb-2">
-                <a
-                  href="./minha-conta.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img src="./assets/images/outline_person_black.png" alt="" />
-                  <span className="ms-2">Minha conta</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./meus-enderecos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_maps_home_work_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Meus endereços</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./meus-pedidos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_fact_check_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Meus pedidos</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./favoritos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_star_rate_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Favoritos</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./carteira.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_attach_money_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Carteira (Cashback)</span>
-                </a>
-              </li>
-            </li>
-          </ul>
-
-          <a
-            href="./index.html"
-            className="btn btn-outline-primary rounded-pill w-100 shadow-lg"
-          >
-            <span>Sair</span>
-          </a>
-        </div>
-      </div>
-
-      <header className="shadow-lg">
-        <nav className="navbar navbar-expand-lg navbar-light bg-white py-4">
-          <div className="container">
-            <div className="d-flex align-items-center">
-              <button
-                className="btn me-0 me-md-4"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasMenu"
-                aria-controls="offcanvasMenu"
-              >
-                <img
-                  className="icon-menu-header"
-                  src="./assets/images/outline_menu.png"
-                  alt="Icon Menu"
-                />
-              </button>
-              <a className="navbar-brand" href="index.html">
-                <img
-                  className="logo-header"
-                  src="./assets/images/logo.png"
-                  alt="Chega Rápido"
-                />
-              </a>
-            </div>
-
-            <div className="d-flex">
-              <div className="d-none d-lg-block">
-                <p className="text-primary mb-0">Entrega em:</p>
-                <p className="text-gray-600 mb-0">
-                  <img src="./assets/images/outline_place.png" alt="" />
-                  Selecionar endereço
-                  <img src="./assets/images/outline_expand_more.png" alt="" />
-                </p>
-              </div>
-
-              <div className="d-flex align-items-center ms-5">
-                Olá, <span className="text-primary ms-2">Welison</span>
-                <img src="./assets/images/outline_expand_more.png" alt="" />
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Header setShowSidebar={setShowSidebar} />
 
       <main className="mt-4">
         <div className="container">
-          <div className="shadow-lg p-3 rounded-10 my-5">
-            <ul className="list-unstyled d-flex flex-md-row flex-column gap-vertical-8  justify-content-between align-items-center mb-0">
-              <li className="w-100">
-                <a
-                  href="minha-conta.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Minha conta
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="meus-enderecos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Meus endereços
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="meus-pedidos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Meus pedidos
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="favoritos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-primary"
-                  style={{ borderBottom: "3px solid #EF4000" }}
-                >
-                  Favoritos
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="carteira.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Carteira (<span className="text-primary">Cashback</span>)
-                </a>
-              </li>
-            </ul>
-          </div>
+          <MenuAccount selected={"favorites"} />
+
           <div className="row">
             <div className="col-12 col-md-6">
               <form action="" className="py-5">
@@ -495,8 +315,8 @@ function Favorites() {
                       <div className="col-6 col-md-12 col-lg-6 mb-4">
                         <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
                           <div className="me-3">
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            <Link
+                              to="/establishmentsclose"
                               className="text-decoration-none position-relative"
                             >
                               <p className="closed-title text-white position-absolute d-block">
@@ -509,22 +329,22 @@ function Favorites() {
                                 width="80"
                                 height="80"
                               />
-                            </a>
+                            </Link>
                           </div>
 
                           <div>
-                            <button className="favorite">
+                            <Link className="favorite" to="/establishmentsclose">
                               <img
                                 src="./assets/images/outline_favorite_border.png"
                                 alt=""
                               />
-                            </button>
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            </Link>
+                            <Link
+                              to="/establishmentsopen"
                               className="text-decoration-none text-black fw-bold"
                             >
                               <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </a>
+                            </Link>
                             <div className="mb-2">
                               <img src="./assets/images/star.png" alt="" />
                               <img src="./assets/images/star.png" alt="" />
@@ -543,8 +363,8 @@ function Favorites() {
                       <div className="col-6 col-md-12 col-lg-6 mb-4">
                         <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
                           <div className="me-3">
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            <Link
+                              to="/establishmentsclose"
                               className="text-decoration-none position-relative"
                             >
                               <p className="closed-title text-white position-absolute d-block">
@@ -557,22 +377,22 @@ function Favorites() {
                                 width="80"
                                 height="80"
                               />
-                            </a>
+                            </Link>
                           </div>
 
                           <div>
-                            <button className="favorite">
+                            <Link className="favorite" to="/establishmentsopen">
                               <img
                                 src="./assets/images/outline_favorite_border.png"
                                 alt=""
                               />
-                            </button>
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            </Link>
+                            <Link
+                              to="/establishmentsclose"
                               className="text-decoration-none text-black fw-bold"
                             >
                               <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </a>
+                            </Link>
                             <div className="mb-2">
                               <img src="./assets/images/star.png" alt="" />
                               <img src="./assets/images/star.png" alt="" />
@@ -591,8 +411,8 @@ function Favorites() {
                       <div className="col-6 col-md-12 col-lg-6 mb-4 rounded-10">
                         <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
                           <div className="me-3">
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            <Link
+                              to="/establishmentsclose"
                               className="text-decoration-none position-relative"
                             >
                               <p className="closed-title text-white position-absolute d-block">
@@ -605,22 +425,22 @@ function Favorites() {
                                 width="80"
                                 height="80"
                               />
-                            </a>
+                            </Link>
                           </div>
 
                           <div>
-                            <button className="favorite">
+                            <Link className="favorite" to="/establishmentsopen">
                               <img
                                 src="./assets/images/outline_favorite_border.png"
                                 alt=""
                               />
-                            </button>
-                            <a
-                              href="./estabelecimento-fechado.html"
+                            </Link>
+                            <Link
+                              to="/establishmentsopen"
                               className="text-decoration-none text-black fw-bold"
                             >
                               <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </a>
+                            </Link>
                             <div className="mb-2">
                               <img src="./assets/images/star.png" alt="" />
                               <img src="./assets/images/star.png" alt="" />
@@ -639,8 +459,8 @@ function Favorites() {
                       <div className="col-6 col-md-12 col-lg-6 mb-4 rounded-10">
                         <div className="product d-flex shadow-lg p-3 position-relative rounded-10">
                           <div className="me-3">
-                            <a
-                              href="./estabelecimento-aberto.html"
+                            <Link
+                              to="/establishmentsclose"
                               className="text-decoration-none position-relative"
                             >
                               <p className="closed-title text-white position-absolute">
@@ -653,22 +473,22 @@ function Favorites() {
                                 width="80"
                                 height="80"
                               />
-                            </a>
+                            </Link>
                           </div>
 
                           <div>
-                            <button className="favorite">
+                            <Link className="favorite" to="/establishmentsopen">
                               <img
                                 src="./assets/images/outline_favorite_border.png"
                                 alt=""
                               />
-                            </button>
-                            <a
-                              href="./estabelecimento-aberto.html"
+                            </Link>
+                            <Link
+                              to="/establishmentsopen"
                               className="text-decoration-none text-black fw-bold"
                             >
                               <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </a>
+                            </Link>
                             <div className="mb-2">
                               <img src="./assets/images/star.png" alt="" />
                               <img src="./assets/images/star.png" alt="" />

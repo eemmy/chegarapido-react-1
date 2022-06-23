@@ -1,10 +1,27 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import Header from "../components/Header";
+import MenuAccount from "../components/MenuAccount";
+import Sidebar from "../components/Sidebar";
+
 function MyAccount() {
+  const [showSidebar, setShowSidebar] = useState(false);
+
   return (
     <div>
       <a
         href="#"
         className="btn btn-primary text-white d-none d-md-block"
-        style={{ position:"fixed", top:"50%", left:"-35px", transform:"rotate(90deg)", borderEndEndRadius:"0", borderEndStartRadius:"0", zIndex:"10", }}
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "-35px",
+          transform: "rotate(90deg)",
+          borderEndEndRadius: "0",
+          borderEndStartRadius: "0",
+          zIndex: "10",
+        }}
       >
         <img src="./assets/images/outline_confirmation_number.png" alt="" />
         Cupons
@@ -13,7 +30,12 @@ function MyAccount() {
       <button
         href="#"
         className="btn btn-primary text-white d-none d-md-block"
-        style={{ position:"fixed", top:"45%", right:"-10px", transform:"rotate(-90deg)", }}
+        style={{
+          position: "fixed",
+          top: "45%",
+          right: "-10px",
+          transform: "rotate(-90deg)",
+        }}
       >
         <img src="./assets/images/outline_shopping_cart.png" alt="" />
       </button>
@@ -21,205 +43,26 @@ function MyAccount() {
       <button
         href="#"
         className="btn btn-primary text-white d-none d-md-block"
-        style={{ position:"fixed", top:"65%", right:"-25px", transform:"rotate(-90deg)", borderEndEndRadius:"0", borderEndStartRadius:"0", zIndex:"10", }}
+        style={{
+          position: "fixed",
+          top: "65%",
+          right: "-25px",
+          transform: "rotate(-90deg)",
+          borderEndEndRadius: "0",
+          borderEndStartRadius: "0",
+          zIndex: "10",
+        }}
       >
         Express
       </button>
 
-      <div
-        className="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasMenu"
-        aria-labelledby="offcanvasMenuLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasMenuLabel">
-            <img src="./assets/images/logo.png" alt="Logo" />
-          </h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fechar"
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <p className="my-5">
-            Olá, <span className="text-primary">Welison!</span>
-          </p>
+      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
 
-          <ul className="list-unstyled mb-5">
-            <li className="mb-2">
-              <a href="./index.html" className="text-decoration-none text-black">
-                <img src="./assets/images/outline_home_black.png" alt="" />
-                <span className="ms-2">Home</span>
-              </a>
-
-              <li className="mb-2">
-                <a
-                  href="./minha-conta.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img src="./assets/images/outline_person_black.png" alt="" />
-                  <span className="ms-2">Minha conta</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./meus-enderecos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_maps_home_work_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Meus endereços</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./meus-pedidos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_fact_check_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Meus pedidos</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./favoritos.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_star_rate_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Favoritos</span>
-                </a>
-              </li>
-
-              <li className="mb-2">
-                <a
-                  href="./carteira.html"
-                  className="text-decoration-none text-black"
-                >
-                  <img
-                    src="./assets/images/outline_attach_money_black.png"
-                    alt=""
-                  />
-                  <span className="ms-2">Carteira (Cashback)</span>
-                </a>
-              </li>
-            </li>
-          </ul>
-
-          <a
-            href="./index.html"
-            className="btn btn-outline-primary rounded-pill w-100 shadow-lg"
-          >
-            <span>Sair</span>
-          </a>
-        </div>
-      </div>
-
-      <header className="shadow-lg">
-        <nav className="navbar navbar-expand-lg navbar-light bg-white py-4">
-          <div className="container">
-            <div className="d-flex align-items-center">
-              <button
-                className="btn me-0 me-md-4"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasMenu"
-                aria-controls="offcanvasMenu"
-              >
-                <img
-                  className="icon-menu-header"
-                  src="./assets/images/outline_menu.png"
-                  alt="Icon Menu"
-                />
-              </button>
-              <a className="navbar-brand" href="index.html">
-                <img
-                  className="logo-header"
-                  src="./assets/images/logo.png"
-                  alt="Chega Rápido"
-                />
-              </a>
-            </div>
-
-            <div className="d-flex">
-              <div className="d-none d-lg-block">
-                <p className="text-primary mb-0">Entrega em:</p>
-                <p className="text-gray-600 mb-0">
-                  <img src="./assets/images/outline_place.png" alt="" />
-                  Selecionar endereço
-                  <img src="./assets/images/outline_expand_more.png" alt="" />
-                </p>
-              </div>
-
-              <div className="d-flex align-items-center ms-5">
-                Olá, <span className="text-primary ms-2">Welison</span>
-                <img src="./assets/images/outline_expand_more.png" alt="" />
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Header setShowSidebar={setShowSidebar} />
 
       <main className="mt-4">
         <div className="container">
-          <div className="shadow-lg p-3 rounded-10 my-5">
-            <ul className="list-unstyled d-flex flex-md-row flex-column gap-vertical-8 justify-content-between align-items-center mb-0">
-              <li className="w-100">
-                <a
-                  href="minha-conta.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-primary"
-                  style={{ borderBottom:"3px solid #EF4000", }}
-                >
-                  Minha conta
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="meus-enderecos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Meus endereços
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="meus-pedidos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Meus pedidos
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="favoritos.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Favoritos
-                </a>
-              </li>
-              <li className="w-100">
-                <a
-                  href="carteira.html"
-                  className="text-decoration-none btn w-100 rounded-0 text-black"
-                >
-                  Carteira (<span className="text-primary">Cashback</span>)
-                </a>
-              </li>
-            </ul>
-          </div>
+          <MenuAccount selected={"myaccount"} />
           <div className="row">
             <div className="col-12 col-md-6">
               <form action="" className="py-5">
@@ -423,7 +266,7 @@ function MyAccount() {
           <div className="container">
             <div
               className="d-sm-block d-md-flex justify-content-between align-items-center"
-              style={{ borderBottom:"1px solid #131313", }}
+              style={{ borderBottom: "1px solid #131313" }}
             >
               <img src="./assets/images/logo_footer.png" alt="Logo" />
 
@@ -443,7 +286,7 @@ function MyAccount() {
                 <a
                   href="#"
                   className="text-decoration-none position-absolute right-0"
-                  style={{ top:"30px", }}
+                  style={{ top: "30px" }}
                 >
                   <img src="./assets/images/outline_chevron_top.png" alt="" />
                 </a>

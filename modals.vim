@@ -9,23 +9,28 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 let s:shortmess_save = &shortmess
 set shortmess=aoO
-badd +0 src/App.js
-badd +785 src/pages/Home.js
-badd +0 src/components/SidebaCoupon.js
-badd +8 src/components/SidebarCoupon.js
-badd +26 src/components/Sidebar.js
-badd +145 html/index.html
-badd +1 src/components/SidebarCart.js
+badd +0 src/components/modals/SelectAddress.js
+badd +1071 html/modals.html
+badd +1 src/assets/images/outline_restaurant.png
+badd +29 src/App.js
+badd +87 src/pages/Modals.js
+badd +1 src/components/modals/ConfirmAddress.js
+badd +28 src/components/modals/ConfirmLocation.js
+badd +8 src/components/modals/RequestLogin.js
+badd +25 src/components/modals/ProductInformation.js
+badd +18 src/components/modals/RestaurantInformation.js
+badd +10 src/components/modals/DigitalChange.js
 argglobal
 %argdel
+$argadd src/components/modals/SelectAddress.js
 set stal=2
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit src/App.js
+edit src/components/modals/SelectAddress.js
 argglobal
-balt src/App.js
+balt src/components/modals/ConfirmAddress.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -36,24 +41,40 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 16) / 33)
+let s:l = 17 - ((16 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
-normal! 0
+keepjumps 17
+normal! 03|
 tabnext
-edit src/pages/Home.js
+edit src/components/modals/DigitalChange.js
+argglobal
+balt src/components/modals/RestaurantInformation.js
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal nofen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 18 - ((17 * winheight(0) + 18) / 36)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 18
+normal! 016|
+tabnext
+edit src/pages/Modals.js
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
-wincmd w
-wincmd _ | wincmd |
-split
-1wincmd k
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -64,13 +85,10 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe 'vert 1resize ' . ((&columns * 88 + 88) / 176)
-exe '2resize ' . ((&lines * 16 + 18) / 36)
-exe 'vert 2resize ' . ((&columns * 87 + 88) / 176)
-exe '3resize ' . ((&lines * 16 + 18) / 36)
-exe 'vert 3resize ' . ((&columns * 87 + 88) / 176)
+exe 'vert 1resize ' . ((&columns * 94 + 94) / 188)
+exe 'vert 2resize ' . ((&columns * 93 + 94) / 188)
 argglobal
-balt src/pages/Home.js
+balt src/components/modals/SelectAddress.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -81,19 +99,19 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 62 - ((20 * winheight(0) + 16) / 33)
+let s:l = 87 - ((27 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 62
-normal! 042|
+keepjumps 87
+normal! 021|
 wincmd w
 argglobal
-if bufexists(fnamemodify("src/pages/Home.js", ":p")) | buffer src/pages/Home.js | else | edit src/pages/Home.js | endif
+if bufexists(fnamemodify("src/pages/Modals.js", ":p")) | buffer src/pages/Modals.js | else | edit src/pages/Modals.js | endif
 if &buftype ==# 'terminal'
-  silent file src/pages/Home.js
+  silent file src/pages/Modals.js
 endif
-balt src/pages/Home.js
+balt src/components/modals/SelectAddress.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -104,80 +122,36 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 15 - ((8 * winheight(0) + 8) / 16)
+let s:l = 9 - ((8 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 15
+keepjumps 9
+normal! 061|
+wincmd w
+exe 'vert 1resize ' . ((&columns * 94 + 94) / 188)
+exe 'vert 2resize ' . ((&columns * 93 + 94) / 188)
+tabnext
+edit html/modals.html
+argglobal
+balt html/modals.html
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 568 - ((8 * winheight(0) + 18) / 36)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 568
 normal! 0
-wincmd w
-argglobal
-if bufexists(fnamemodify("src/pages/Home.js", ":p")) | buffer src/pages/Home.js | else | edit src/pages/Home.js | endif
-if &buftype ==# 'terminal'
-  silent file src/pages/Home.js
-endif
-balt src/pages/Home.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 785 - ((8 * winheight(0) + 8) / 16)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 785
-normal! 055|
-wincmd w
-exe 'vert 1resize ' . ((&columns * 88 + 88) / 176)
-exe '2resize ' . ((&lines * 16 + 18) / 36)
-exe 'vert 2resize ' . ((&columns * 87 + 88) / 176)
-exe '3resize ' . ((&lines * 16 + 18) / 36)
-exe 'vert 3resize ' . ((&columns * 87 + 88) / 176)
-tabnext
-edit src/components/SidebarCart.js
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 3 - ((2 * winheight(0) + 16) / 33)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 3
-normal! 038|
-tabnext
-edit src/components/SidebarCoupon.js
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 4 - ((3 * winheight(0) + 16) / 33)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 4
-normal! 08|
-tabnext 4
+tabnext 1
 set stal=1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -191,6 +165,7 @@ if filereadable(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
+nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :
