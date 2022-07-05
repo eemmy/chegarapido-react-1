@@ -3,7 +3,7 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
+  useLocation
 } from "react-router-dom";
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -27,6 +27,8 @@ import Establishments from "./pages/Establishments";
 import EstablishmentsOpen from "./pages/EstablishmentsOpen";
 import EstablishmentsClose from "./pages/EstablishmentsClose";
 import Modals from "./pages/Modals";
+
+import "./index.css";
 
 function RequireAuth({ children }) {
   let { signed } = useAuth();

@@ -5,7 +5,10 @@ import SelectAddress from "../components/modals/SelectAddress";
 
 function Header({ setShowSidebar }) {
   const [hidden, setHidden] = useState(true);
-  const [logged, setLogged] = useState(true);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [logged, setLogged] = useState(user ? true : false);
 
   return (
     <header className="shadow-lg">

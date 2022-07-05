@@ -1,0 +1,55 @@
+.react-autocomplete-input {
+   background-clip: padding-box;
+   background-color: #fff;
+   border: 1px solid rgba(0,0,0,0.15);
+   bottom: auto;
+   box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+   display: block;
+   font-size: 14px;
+   list-style: none;
+   padding: 1px;
+   position: absolute;
+   text-align: left;
+   z-index: 20000;
+}
+
+.react-autocomplete-input > li {
+  cursor: pointer;
+  padding: 10px;
+  min-width: 100px;
+}
+
+.react-autocomplete-input > li.active {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+#input-partitioned {
+  outline: none;
+  font-size: 24px;
+  padding-left: 14px;
+  letter-spacing: 30px;
+  border: 0;
+  background-image: linear-gradient(
+    to left,
+    #ef4000 70%,
+    rgba(255, 255, 255, 0) 0%
+  );
+  background-position: bottom;
+  background-size: 43px 3px;
+  background-repeat: repeat-x;
+  background-position-x: 35px;
+  width: 300px;
+  min-width: 300px;
+}
+
+#input-partitioned-inner {
+  left: 0;
+  position: sticky;
+}
+
+#input-partitioned-outer {
+  width: 263px;
+  overflow: hidden;
+  margin: 0 auto;
+}

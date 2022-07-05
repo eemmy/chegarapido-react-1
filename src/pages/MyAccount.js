@@ -1,12 +1,57 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import InputMask from "react-input-mask";
+
 import Header from "../components/Header";
 import MenuAccount from "../components/MenuAccount";
 import Sidebar from "../components/Sidebar";
 
+import { useAuth } from "../contexts/AuthContext";
+
+import { apiWithToken as api } from "../services/api";
+
 function MyAccount() {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [form, setForm] = useState({});
+
+  const { user } = useAuth();
+
+  const handleChange = ({ target }) => {
+    setForm({ ...form, [target.name]: target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log(user.data)
+
+    const data = {...form, password: user.data.password}
+
+    const response = await api.put("/users/update", data);
+
+    console.log(response.data.data);
+  };
+
+  const fetchUser = async () => {
+    const response = await api.get('/users/get')
+
+    console.log(response);
+
+    setForm(response.data.data)
+  };
+
+  useEffect(() => {
+    //console.log(user.data)
+    //let a = {}
+    //a.nome = user.nome
+    //a.email = user.email
+    //a.cpf = user.cpf
+    //a.telefone = user.telefone
+    //a.password = user.password
+  fetchUser()
+    //setForm(user)
+  }, []);
 
   return (
     <div>
@@ -56,7 +101,11 @@ function MyAccount() {
         Express
       </button>
 
-      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
+      {showSidebar ? (
+        <Sidebar setShowSidebar={setShowSidebar} logged={true} />
+      ) : (
+        ""
+      )}
 
       <Header setShowSidebar={setShowSidebar} />
 
@@ -119,11 +168,12 @@ function MyAccount() {
                     <div className="form-floating">
                       <input
                         type="text"
-                        name="name"
+                        name="nome"
+                        onChange={handleChange}
                         id="name"
                         className="form-control rounded-pill"
                         placeholder="John Doe"
-                        value="John Doe"
+    value={form.nome}
                       />
                       <label for="name" className="form-label">
                         Nome e sobrenome
@@ -133,14 +183,22 @@ function MyAccount() {
 
                   <div className="col">
                     <div className="form-floating">
-                      <input
-                        type="text"
+                      <InputMask
+                        mask="999.999.999-99"
                         name="cpf"
-                        id="cpf"
-                        className="form-control rounded-pill"
-                        placeholder="99999999999"
-                        value="99999999999"
-                      />
+                        value={form.cpf}
+                        onChange={handleChange}
+                      >
+                        {(inputProps) => (
+                          <input
+                            className="form-control rounded-pill mb-3 form-control-lg"
+                            type="text"
+                            placeholder="99999999999"
+                            required={true}
+                            {...inputProps}
+                          />
+                        )}
+                      </InputMask>
                       <label for="cpf" className="form-label">
                         CPF
                       </label>
@@ -153,14 +211,22 @@ function MyAccount() {
                 <div className="row">
                   <div className="col">
                     <div className="form-floating">
-                      <input
-                        type="text"
+                      <InputMask
+                        mask="(99) 9.9999-9999"
                         name="phone"
-                        id="phone"
-                        className="form-control rounded-pill"
-                        placeholder="(99) 9999-9999"
-                        value="(99) 9999-9999"
-                      />
+                        value={form.telefone}
+                        onChange={handleChange}
+                      >
+                        {(inputProps) => (
+                          <input
+                            className="form-control rounded-pill mb-3 form-control-lg"
+                            type="text"
+                            placeholder="(99) 9.9999-9999"
+                            required={true}
+                            {...inputProps}
+                          />
+                        )}
+                      </InputMask>
                       <label for="phone" className="form-label">
                         Celular
                       </label>
@@ -175,7 +241,8 @@ function MyAccount() {
                         id="email"
                         className="form-control rounded-pill"
                         placeholder="name@example.com"
-                        value="name@example.com"
+    value={form.email}
+                        onChange={handleChange}
                       />
                       <label for="email" className="form-label">
                         Email
@@ -188,12 +255,12 @@ function MyAccount() {
 
                 <div className="form-floating">
                   <input
-                    type="text"
+                    type="password"
                     name="password"
                     id="password"
                     className="form-control rounded-pill"
                     placeholder="**********"
-                    value="**********"
+                    onChange={handleChange}
                   />
                   <label for="password" className="form-label">
                     Senha
@@ -219,7 +286,7 @@ function MyAccount() {
                     <span className="ms-3">Entrar com o Facebook</span>
                   </span>
 
-                  <button className="btn btn-outline-primary rounded-pill shadow-lg">
+                  <button className="btn btn-outline-primary rounded-pill shadow-lg" disabled>
                     Desconectar
                   </button>
                 </div>
@@ -235,7 +302,7 @@ function MyAccount() {
                     <span className="ms-3">Entrar com o Facebook</span>{" "}
                   </span>
 
-                  <button className="btn btn-outline-primary rounded-pill shadow-lg">
+                  <button className="btn btn-outline-primary rounded-pill shadow-lg" disabled>
                     Desconectar
                   </button>
                 </div>
@@ -245,6 +312,7 @@ function MyAccount() {
                 <button
                   type="submit"
                   className="btn btn-lg btn-outline-primary rounded-pill shadow-lg w-100 mb-5"
+                  onClick={handleSubmit}
                 >
                   Salvar
                 </button>

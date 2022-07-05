@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiWithoutToken } from "../services/api";
+
+import InputMask from "react-input-mask";
+import TextInput from "react-autocomplete-input";
+
+import "react-autocomplete-input/dist/bundle";
 
 function RegisterPage() {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ date: "0000-00-00" });
+  const [cities, setCities] = useState({});
+  const [options, setOptions] = useState({});
 
   const { Register } = useAuth();
   let navigate = useNavigate();
@@ -12,12 +20,32 @@ function RegisterPage() {
     setForm({ ...form, [target.name]: target.value });
   };
 
+  const getCities = async () => {
+    const response = await apiWithoutToken("public/cities");
+
+    const a = response.data.data.map((item) => item.nome);
+
+    setOptions(a);
+
+    setCities(response.data.data);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await Register(form);
-    navigate('/myaccount')
+    const err = await Register(form);
+
+    if (err) {
+      alert("Ocorreu um erro durante o registro, tente novamente mais tarde");
+      return;
+    }
+
+    return navigate("/myaccount");
   };
+
+  useEffect(() => {
+    getCities();
+  }, []);
 
   useEffect(() => {
     console.log(form);
@@ -84,38 +112,55 @@ function RegisterPage() {
                 <form onSubmit={handleSubmit} className="w-100 mb-5">
                   <input
                     type="text"
-                    name="name"
+                    name="nome"
                     onChange={handleChange}
                     placeholder="Seu nome completo"
                     className="form-control rounded-pill mb-3 form-control-lg"
+                    required={true}
                   />
 
                   <div className="row">
                     <div className="col-6">
                       <input
-                        type="text"
+                        type="email"
                         placeholder="Email"
                         name="email"
                         onChange={handleChange}
                         className="form-control rounded-pill mb-3 form-control-lg"
+                        required={true}
                       />
                     </div>
                     <div className="col-6">
                       <input
-                        type="text"
-                        name="password"
+                        type="password"
+                        name="senha"
                         onChange={handleChange}
                         placeholder="Senha"
                         className="form-control rounded-pill mb-3 form-control-lg"
+                        required={true}
                       />
                     </div>
                     <div className="col-6">
-                      <input
+                      <TextInput
+                        trigger=""
+                        options={options}
                         type="text"
-                        name="city"
-                        onChange={handleChange}
+                        name="cidade"
                         placeholder="Cidade"
                         className="form-control rounded-pill mb-3 form-control-lg"
+                        autocomplete="off"
+                        onChange={(value) => {
+                          const a = cities.filter((item) => {
+                            let val = value.slice(0, -1)
+                            console.log(item.nome == val);
+                            return item.nome == val;
+                          });
+
+                          console.log(a);
+                          handleChange({ target: { name: "cidade", value: a[0].id } });
+                        }}
+                        required={true}
+                        Component={"input"}
                       />
                     </div>
 
@@ -127,11 +172,14 @@ function RegisterPage() {
                         mb-3
                         form-control-lg
                       "
-                        name="state"
+                        name="estado"
                         onChange={handleChange}
                         aria-label="Estado"
+                        required={true}
                       >
-                        <option defaultValue={true}>Estado</option>
+                        <option defaultValue={true} value="">
+                          Estado
+                        </option>
 
                         <option value="1">Acre</option>
                         <option value="2">Alagoas</option>
@@ -162,23 +210,33 @@ function RegisterPage() {
                         <option value="27">Tocantins</option>
                       </select>
                     </div>
-
                     <div className="col-6">
-                      <input
-                        type="text"
+                      <InputMask
+                        mask="999.999.999-99"
                         name="cpf"
+                        value={form.cpf}
                         onChange={handleChange}
-                        placeholder="CPF"
-                        className="form-control rounded-pill mb-3 form-control-lg"
-                      />
+                      >
+                        {(inputProps) => (
+                          <input
+                            className="form-control rounded-pill mb-3 form-control-lg"
+                            type="text"
+                            placeholder="CPF"
+                            required={true}
+                            {...inputProps}
+                          />
+                        )}
+                      </InputMask>
                     </div>
                     <div className="col-6">
                       <input
+                        id="date"
+                        name="data_nascimento"
                         type="date"
-                        name="birthdate"
+                        value={form.data_nascimento}
                         onChange={handleChange}
-                        placeholder="Data de nascimento"
                         className="form-control rounded-pill mb-3 form-control-lg"
+                        required={true}
                       />
                     </div>
                     <div className="col-6">
@@ -189,9 +247,14 @@ function RegisterPage() {
                         mb-3
                         form-control-lg
                       "
-                        name="sex"
+                        name="sexo"
                         onChange={handleChange}
+                        required={true}
                       >
+                        <option defaultValue={true} value="">
+                          Sexo
+                        </option>
+
                         <option value="1" defaultValue={true}>
                           Masculino
                         </option>
@@ -199,14 +262,24 @@ function RegisterPage() {
                         <option value="3">Outros</option>
                       </select>
                     </div>
+
                     <div className="col-6">
-                      <input
-                        type="tel"
-                        name="tel"
+                      <InputMask
+                        mask="(99) 9.9999-9999"
+                        name="telefone"
+                        value={form.telefone}
                         onChange={handleChange}
-                        placeholder="(99) 9 9999 9999"
-                        className="form-control rounded-pill mb-3 form-control-lg"
-                      />
+                      >
+                        {(inputProps) => (
+                          <input
+                            className="form-control rounded-pill mb-3 form-control-lg"
+                            type="text"
+                            placeholder="(99) 9.9999-9999"
+                            required={true}
+                            {...inputProps}
+                          />
+                        )}
+                      </InputMask>
                     </div>
                   </div>
 

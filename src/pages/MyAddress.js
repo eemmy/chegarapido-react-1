@@ -5,11 +5,39 @@ import Header from "../components/Header";
 import MenuAccount from "../components/MenuAccount";
 import Sidebar from "../components/Sidebar";
 
+import SelectAddress from "../components/modals/SelectAddress";
+import RegisterOrEditAddress from "../components/modals/RegisterOrEditAddress";
+
+import { apiWithToken as api } from "../services/api";
+
 function MyAddress() {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [hiddenRegister, setHiddenRegister] = useState(true);
+  const [hiddenEdit, setHiddenEdit] = useState(true);
+  const [addresses, setAddress] = useState([]);
+
+  const fetchAddress = async () => {
+    const response = await api.get("/addresses/get");
+
+    console.log(response.data.data.addresses);
+
+    setAddress(response.data.data.addresses);
+  };
+
+  useEffect(() => {
+    fetchAddress()
+  }, [])
 
   return (
     <div>
+      <RegisterOrEditAddress
+        hidden={hiddenEdit}
+        closeModal={() => setHiddenEdit(true)}
+      />
+      <SelectAddress
+        hidden={hiddenRegister}
+        closeModal={() => setHiddenRegister(true)}
+      />
       <a
         href="#"
         className="btn btn-primary text-white d-none d-md-block"
@@ -389,7 +417,11 @@ function MyAddress() {
         </div>
       </div>
 
-      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
+      {showSidebar ? (
+        <Sidebar setShowSidebar={setShowSidebar} logged={true} />
+      ) : (
+        ""
+      )}
 
       <Header setShowSidebar={setShowSidebar} />
 
@@ -423,90 +455,60 @@ function MyAddress() {
                     className="btn btn-outline-primary rounded-pill"
                     data-bs-toggle="modal"
                     data-bs-target="#address-modal"
+                    onClick={() => setHiddenRegister(false)}
                   >
                     Cadastrar mais endereços
                   </button>
                 </div>
 
-                <div className="mb-4">
-                  <div className="border border-primary rounded-3 p-4 d-flex justify-content-between align-items-center">
-                    <div className="d-flex">
-                      <img
-                        src="./assets/images/outline_place.png"
-                        alt=""
-                        width="40"
-                        height="40"
-                        className="me-3"
-                      />
-                      <div>
-                        <p className="mb-2">
-                          R. Rua Walter Nolli - 169, Redenção PA
-                        </p>
-                        <p className="fs-7 mb-0 text-gray-600">
-                          Local de entrega: Casa
-                        </p>
+                {addresses.map((address) => {
+                  return (
+                    <div className="mb-4">
+                      <div className="border border-primary rounded-3 p-4 d-flex justify-content-between align-items-center">
+                        <div className="d-flex">
+                          <img
+                            src="./assets/images/outline_place.png"
+                            alt=""
+                            width="40"
+                            height="40"
+                            className="me-3"
+                          />
+                          <div>
+                            <p className="mb-2">
+                              {address.endereco} - {address.numero},{" "}
+                              {address.cidade} {address.estado}
+                            </p>
+                            <p className="fs-7 mb-0 text-gray-600">
+                              Local de entrega: {address.tipo_local}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="d-flex align-items-center ms-2">
+                          <button
+                            type="button"
+                            className="btn btn-sm p-0"
+                            data-bs-toggle="modal"
+                            data-bs-target="#edit-address-modal"
+                            onClick={() => setHiddenEdit()}
+                          >
+                            <img
+                              src="./assets/images/outline_edit.png"
+                              alt=""
+                              className="me-1"
+                            />
+                          </button>
+                          <button type="button" className="btn btn-sm p-0">
+                            <img
+                              src="./assets/images/outline_delete.png "
+                              alt=""
+                            />
+                          </button>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="d-flex align-items-center ms-2">
-                      <button
-                        type="button"
-                        className="btn btn-sm p-0"
-                        data-bs-toggle="modal"
-                        data-bs-target="#edit-address-modal"
-                      >
-                        <img
-                          src="./assets/images/outline_edit.png"
-                          alt=""
-                          className="me-1"
-                        />
-                      </button>
-                      <button type="button" className="btn btn-sm p-0">
-                        <img src="./assets/images/outline_delete.png " alt="" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <div className="border border-primary rounded-3 p-4 d-flex justify-content-between align-items-center">
-                    <div className="d-flex">
-                      <img
-                        src="./assets/images/outline_place.png"
-                        alt=""
-                        width="40"
-                        height="40"
-                        className="me-3"
-                      />
-                      <div>
-                        <p className="mb-2">
-                          R. Rua Walter Nolli - 169, Redenção PA
-                        </p>
-                        <p className="fs-7 mb-0 text-gray-600">
-                          Local de entrega: Casa
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="d-flex align-items-center ms-2">
-                      <button
-                        type="button"
-                        className="btn btn-sm p-0"
-                        data-bs-toggle="modal"
-                        data-bs-target="#edit-address-modal"
-                      >
-                        <img
-                          src="./assets/images/outline_edit.png"
-                          alt=""
-                          className="me-1"
-                        />
-                      </button>
-                      <button type="button" className="btn btn-sm p-0">
-                        <img src="./assets/images/outline_delete.png " alt="" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })}
               </form>
             </div>
             <div className="col-6 d-none d-md-block text-center">

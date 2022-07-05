@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import api from "../services/api";
+import { apiWithoutToken as api } from "../services/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  let navigate = useNavigate();
 
   useEffect(() => {
     const storagedUser = localStorage.getItem("user");
@@ -23,8 +25,8 @@ export const AuthProvider = ({ children }) => {
 
       console.log(response.data);
 
-      localStorage.setItem("user", JSON.stringify(response.data));
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+      localStorage.setItem("token", response.data.data.token);
       setUser(response.data);
     } catch (err) {
       return err;
@@ -43,12 +45,26 @@ export const AuthProvider = ({ children }) => {
         //email: response.data.email,
         //};
 
-        localStorage.setItem("user", JSON.stringify(response.data));
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("token", response.data.data.token);
 
         setUser(response.data);
       } else if (method == "phone") {
-        // WIP
+        const response = await api.post("/auth/verify/code", credentials);
+
+        console.log(response);
+
+        //const user_data = {
+        //name: response.data.name,
+        //email: response.data.email,
+        //};
+
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("token", response.data.data.token);
+
+        setUser(response.data);
+
+        return navigate("/myaccount");
       }
 
       // api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`;

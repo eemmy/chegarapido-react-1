@@ -3,10 +3,41 @@ import { Link } from "react-router-dom";
 
 import Header from "../components/Header";
 import MenuAccount from "../components/MenuAccount";
-import Sidebar from '../components/Sidebar'
+import Sidebar from "../components/Sidebar";
+
+import { apiWithToken as api } from "../services/api";
 
 function Favorites() {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [tab, setTab] = useState("establishments");
+  const [establishments, setEstablishments] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const fetchFavorites = async () => {
+    let query = "latitude=-8.040903&longitude=-50.034375&cityId=1";
+
+    const response = await api.get(`/favorites/get?${query}`);
+
+    console.log(response.data.data);
+    setEstablishments(response.data.data.estabelecimentos);
+    setProducts(response.data.data.produtos);
+  };
+
+  const handleFavorite = async (event, id) => {
+    event.preventDefault();
+
+    let query = "cityId=1";
+
+    const response = await api.post(`/favorites/action?${query}`, {
+      storeId: id,
+    });
+
+    fetchFavorites();
+  };
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
 
   return (
     <div>
@@ -241,7 +272,11 @@ function Favorites() {
         Express
       </button>
 
-      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
+      {showSidebar ? (
+        <Sidebar setShowSidebar={setShowSidebar} logged={true} />
+      ) : (
+        ""
+      )}
 
       <Header setShowSidebar={setShowSidebar} />
 
@@ -276,7 +311,9 @@ function Favorites() {
                 >
                   <li className="app-nav-item">
                     <button
-                      className="app-nav-link active"
+                      className={`app-nav-link ${
+                        tab == "establishments" ? "active" : ""
+                      }`}
                       id="establishments-tab"
                       data-bs-toggle="tab"
                       data-bs-target="#establishments"
@@ -284,13 +321,16 @@ function Favorites() {
                       role="tab"
                       aria-controls="establishments"
                       aria-selected="true"
+                      onClick={() => setTab("establishments")}
                     >
                       Estabelecimentos
                     </button>
                   </li>
                   <li className="app-nav-item" role="presentation">
                     <button
-                      className="app-nav-link"
+                      className={`app-nav-link ${
+                        tab == "products" ? "active" : ""
+                      }`}
                       id="products-tab"
                       data-bs-toggle="tab"
                       data-bs-target="#products"
@@ -298,6 +338,7 @@ function Favorites() {
                       role="tab"
                       aria-controls="products"
                       aria-selected="false"
+                      onClick={() => setTab("products")}
                     >
                       Produtos
                     </button>
@@ -305,347 +346,240 @@ function Favorites() {
                 </ul>
 
                 <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="establishments"
-                    role="tabpanel"
-                    aria-labelledby="establishments-tab"
-                  >
-                    <div className="row">
-                      <div className="col-6 col-md-12 col-lg-6 mb-4">
-                        <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
+                  {tab == "establishments" ? (
+                    <div
+                      className="tab-pane fade show active"
+                      id="establishments"
+                      role="tabpanel"
+                      aria-labelledby="establishments-tab"
+                    >
+                      <div className="row">
+                        {establishments.map((establishment) => {
+                          return (
+                            <div className="col-6 col-md-12 col-lg-6 mb-4">
+                              <div
+                                className={`product d-flex shadow-lg p-3 position-relative rounded-10 ${
+                                  establishment.status_aberto == 0
+                                    ? "closed"
+                                    : ""
+                                }`}
+                              >
+                                <div className="me-3">
+                                  <Link
+                                    to="/establishmentsclose"
+                                    className="text-decoration-none position-relative"
+                                  >
+                                    {establishment.status_aberto == 0 ? (
+                                      <p className="closed-title text-white position-absolute d-block">
+                                        Fechado
+                                      </p>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    <img
+                                      src={establishment.icone}
+                                      alt=""
+                                      className="img-fluid"
+                                      width="80"
+                                      height="80"
+                                    />
+                                  </Link>
+                                </div>
+
+                                <div>
+                                  <button
+                                    className="favorite"
+                                    onClick={(event) =>
+                                      handleFavorite(event, establishment.id)
+                                    }
+                                  >
+                                    <img
+                                      src="./assets/images/outline_favorite_border.png"
+                                      alt=""
+                                    />
+                                  </button>
+                                  <Link
+                                    to="/establishmentsopen"
+                                    className="text-decoration-none text-black fw-bold"
+                                  >
+                                    <h2 className="fs-5 mb-0 pe-4">
+                                      {establishment.nome}
+                                    </h2>
+                                  </Link>
+                                  <div className="mb-2">
+                                    {[
+                                      ...Array(
+                                        Number.parseInt(establishment.stars)
+                                      ),
+                                    ].map(() => {
+                                      return (
+                                        <img
+                                          src="./assets/images/star.png"
+                                          alt=""
+                                        />
+                                      );
+                                    })}
+                                  </div>
+
+                                  <p className="mb-0">R$ 4,66 - 11,5 km </p>
+                                  <p>35 – 45 min</p>
+                                  <p className="text-danger">Cashback: 3%</p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {tab == "products" ? (
+                    <div
+                      className="tab-pane fade inner-border show active"
+                      id="products"
+                      role="tabpanel"
+                      aria-labelledby="products-tab"
+                    >
+                      <div className="py-5">
+                        <div className="d-flex position-relative rounded-10">
                           <div className="me-3">
-                            <Link
-                              to="/establishmentsclose"
+                            <a
+                              href="#"
                               className="text-decoration-none position-relative"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <p className="closed-title text-white position-absolute d-block">
-                                Fechado
-                              </p>
                               <img
                                 src="./assets/images/jac-burger.png"
                                 alt=""
                                 className="img-fluid"
-                                width="80"
-                                height="80"
+                                width="230"
+                                height="120"
                               />
-                            </Link>
+                            </a>
                           </div>
 
                           <div>
-                            <Link className="favorite" to="/establishmentsclose">
-                              <img
-                                src="./assets/images/outline_favorite_border.png"
-                                alt=""
-                              />
-                            </Link>
-                            <Link
-                              to="/establishmentsopen"
+                            <button className="favorite">
+                              <img src="./assets/images/outline_favorite_border.png" />
+                            </button>
+                            <a
+                              href="#"
                               className="text-decoration-none text-black fw-bold"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </Link>
-                            <div className="mb-2">
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                            </div>
+                              <h2 className="fs-5 mb-3 pe-4">
+                                Gorgonzola Burger + Porção
+                              </h2>
+                            </a>
 
-                            <p className="mb-0">R$ 4,66 - 11,5 km </p>
+                            <p className="mb-0">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Cras facilisis risus nibh, ut porta libero
+                              interdum nec.
+                            </p>
                             <p>35 – 45 min</p>
-                            <p className="text-danger">Cashback: 3%</p>
+                            <p className="fs-6 mb-0">R$ 90,50</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="col-6 col-md-12 col-lg-6 mb-4">
-                        <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
+                      <div className="py-5">
+                        <div className="d-flex position-relative rounded-10">
                           <div className="me-3">
-                            <Link
-                              to="/establishmentsclose"
+                            <a
+                              href="#"
                               className="text-decoration-none position-relative"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <p className="closed-title text-white position-absolute d-block">
-                                Fechado
-                              </p>
                               <img
                                 src="./assets/images/jac-burger.png"
                                 alt=""
                                 className="img-fluid"
-                                width="80"
-                                height="80"
+                                width="230"
+                                height="120"
                               />
-                            </Link>
+                            </a>
                           </div>
 
                           <div>
-                            <Link className="favorite" to="/establishmentsopen">
-                              <img
-                                src="./assets/images/outline_favorite_border.png"
-                                alt=""
-                              />
-                            </Link>
-                            <Link
-                              to="/establishmentsclose"
+                            <button className="favorite">
+                              <img src="./assets/images/outline_favorite_border.png" />
+                            </button>
+                            <a
+                              href="#"
                               className="text-decoration-none text-black fw-bold"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </Link>
-                            <div className="mb-2">
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                            </div>
+                              <h2 className="fs-5 mb-3 pe-4">
+                                Gorgonzola Burger + Porção
+                              </h2>
+                            </a>
 
-                            <p className="mb-0">R$ 4,66 - 11,5 km </p>
+                            <p className="mb-0">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Cras facilisis risus nibh, ut porta libero
+                              interdum nec.
+                            </p>
                             <p>35 – 45 min</p>
-                            <p className="text-danger">Cashback: 3%</p>
+                            <p className="fs-6 mb-0">R$ 90,50</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="col-6 col-md-12 col-lg-6 mb-4 rounded-10">
-                        <div className="product closed d-flex shadow-lg p-3 position-relative  rounded-10">
+                      <div className="py-5">
+                        <div className="d-flex position-relative rounded-10">
                           <div className="me-3">
-                            <Link
-                              to="/establishmentsclose"
+                            <a
+                              href="#"
                               className="text-decoration-none position-relative"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <p className="closed-title text-white position-absolute d-block">
-                                Fechado
-                              </p>
                               <img
                                 src="./assets/images/jac-burger.png"
                                 alt=""
                                 className="img-fluid"
-                                width="80"
-                                height="80"
+                                width="230"
+                                height="120"
                               />
-                            </Link>
+                            </a>
                           </div>
 
                           <div>
-                            <Link className="favorite" to="/establishmentsopen">
-                              <img
-                                src="./assets/images/outline_favorite_border.png"
-                                alt=""
-                              />
-                            </Link>
-                            <Link
-                              to="/establishmentsopen"
+                            <button className="favorite">
+                              <img src="./assets/images/outline_favorite_border.png" />
+                            </button>
+                            <a
+                              href="#"
                               className="text-decoration-none text-black fw-bold"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalProduct"
                             >
-                              <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </Link>
-                            <div className="mb-2">
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                            </div>
+                              <h2 className="fs-5 mb-3 pe-4">
+                                Gorgonzola Burger + Porção
+                              </h2>
+                            </a>
 
-                            <p className="mb-0">R$ 4,66 - 11,5 km </p>
+                            <p className="mb-0">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Cras facilisis risus nibh, ut porta libero
+                              interdum nec.
+                            </p>
                             <p>35 – 45 min</p>
-                            <p className="text-danger">Cashback: 3%</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="col-6 col-md-12 col-lg-6 mb-4 rounded-10">
-                        <div className="product d-flex shadow-lg p-3 position-relative rounded-10">
-                          <div className="me-3">
-                            <Link
-                              to="/establishmentsclose"
-                              className="text-decoration-none position-relative"
-                            >
-                              <p className="closed-title text-white position-absolute">
-                                Fechado
-                              </p>
-                              <img
-                                src="./assets/images/jac-burger.png"
-                                alt=""
-                                className="img-fluid"
-                                width="80"
-                                height="80"
-                              />
-                            </Link>
-                          </div>
-
-                          <div>
-                            <Link className="favorite" to="/establishmentsopen">
-                              <img
-                                src="./assets/images/outline_favorite_border.png"
-                                alt=""
-                              />
-                            </Link>
-                            <Link
-                              to="/establishmentsopen"
-                              className="text-decoration-none text-black fw-bold"
-                            >
-                              <h2 className="fs-5 mb-0 pe-4">Jac Burger</h2>
-                            </Link>
-                            <div className="mb-2">
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                              <img src="./assets/images/star.png" alt="" />
-                            </div>
-
-                            <p className="mb-0">R$ 4,66 - 11,5 km </p>
-                            <p>35 – 45 min</p>
-                            <p className="text-danger">Cashback: 3%</p>
+                            <p className="fs-6 mb-0">R$ 90,50</p>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className="tab-pane fade inner-border"
-                    id="products"
-                    role="tabpanel"
-                    aria-labelledby="products-tab"
-                  >
-                    <div className="py-5">
-                      <div className="d-flex position-relative rounded-10">
-                        <div className="me-3">
-                          <a
-                            href="#"
-                            className="text-decoration-none position-relative"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <img
-                              src="./assets/images/jac-burger.png"
-                              alt=""
-                              className="img-fluid"
-                              width="230"
-                              height="120"
-                            />
-                          </a>
-                        </div>
-
-                        <div>
-                          <button className="favorite">
-                            <img src="./assets/images/outline_favorite_border.png" />
-                          </button>
-                          <a
-                            href="#"
-                            className="text-decoration-none text-black fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <h2 className="fs-5 mb-3 pe-4">
-                              Gorgonzola Burger + Porção
-                            </h2>
-                          </a>
-
-                          <p className="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Cras facilisis risus nibh, ut porta libero
-                            interdum nec.
-                          </p>
-                          <p>35 – 45 min</p>
-                          <p className="fs-6 mb-0">R$ 90,50</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="py-5">
-                      <div className="d-flex position-relative rounded-10">
-                        <div className="me-3">
-                          <a
-                            href="#"
-                            className="text-decoration-none position-relative"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <img
-                              src="./assets/images/jac-burger.png"
-                              alt=""
-                              className="img-fluid"
-                              width="230"
-                              height="120"
-                            />
-                          </a>
-                        </div>
-
-                        <div>
-                          <button className="favorite">
-                            <img src="./assets/images/outline_favorite_border.png" />
-                          </button>
-                          <a
-                            href="#"
-                            className="text-decoration-none text-black fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <h2 className="fs-5 mb-3 pe-4">
-                              Gorgonzola Burger + Porção
-                            </h2>
-                          </a>
-
-                          <p className="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Cras facilisis risus nibh, ut porta libero
-                            interdum nec.
-                          </p>
-                          <p>35 – 45 min</p>
-                          <p className="fs-6 mb-0">R$ 90,50</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="py-5">
-                      <div className="d-flex position-relative rounded-10">
-                        <div className="me-3">
-                          <a
-                            href="#"
-                            className="text-decoration-none position-relative"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <img
-                              src="./assets/images/jac-burger.png"
-                              alt=""
-                              className="img-fluid"
-                              width="230"
-                              height="120"
-                            />
-                          </a>
-                        </div>
-
-                        <div>
-                          <button className="favorite">
-                            <img src="./assets/images/outline_favorite_border.png" />
-                          </button>
-                          <a
-                            href="#"
-                            className="text-decoration-none text-black fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalProduct"
-                          >
-                            <h2 className="fs-5 mb-3 pe-4">
-                              Gorgonzola Burger + Porção
-                            </h2>
-                          </a>
-
-                          <p className="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Cras facilisis risus nibh, ut porta libero
-                            interdum nec.
-                          </p>
-                          <p>35 – 45 min</p>
-                          <p className="fs-6 mb-0">R$ 90,50</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </form>
             </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -7,6 +7,7 @@ function LoginEmail() {
   const [form, setForm] = useState({});
 
   const { Login } = useAuth();
+  let navigate = useNavigate();
 
   const handleChange = ({ target }) => {
     setForm({ ...form, [target.name]: target.value });
@@ -15,7 +16,14 @@ function LoginEmail() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await Login(form, 'email');
+    const err = await Login(form, 'email');
+
+    if (err) {
+      alert("Ocorreu um erro durante o login, tente novamente mais tarde");
+      return;
+    }
+
+    return navigate("/myaccount");
   };
 
   useEffect(() => {

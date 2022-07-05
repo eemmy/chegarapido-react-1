@@ -6,9 +6,47 @@ import MenuAccount from "../components/MenuAccount";
 import ProductDetails from "../components/modals/ProductDetails";
 import Sidebar from "../components/Sidebar";
 
+import { apiWithToken as api } from "../services/api";
+
 function MyRequests() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [hidden, setHidden] = useState(true);
+  const [tab, setTab] = useState("active");
+
+  const [requestActive, setRequestActive] = useState([]);
+  const [requestPrevious, setRequestPrevious] = useState([]);
+  const [requestCanceled, setRequestCanceled] = useState([]);
+
+  const fetchOrders = async () => {
+    const response = await api.get("/orders/get");
+
+    if (response.status == 404) {
+      return;
+    }
+
+    response.data?.data?.orders.map((order) => {
+      if (order.status_entrega == 3) {
+        let a = [...requestPrevious, order];
+
+        setRequestPrevious(a);
+        return;
+      }
+
+      if (order.status_entrega == 4) {
+        let a = [...requestCanceled, order];
+
+        setRequestCanceled(a);
+        return;
+      }
+
+      let a = [...requestActive, order];
+      setRequestActive(order);
+    });
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   return (
     <div>
@@ -667,7 +705,11 @@ function MyRequests() {
         </div>
       </div>
 
-      {showSidebar ? <Sidebar setShowSidebar={setShowSidebar} logged={true} /> : ""}
+      {showSidebar ? (
+        <Sidebar setShowSidebar={setShowSidebar} logged={true} />
+      ) : (
+        ""
+      )}
 
       <Header setShowSidebar={setShowSidebar} />
 
@@ -699,7 +741,9 @@ function MyRequests() {
                 <ul className="nav app-nav-tabs mb-5" role="tablist">
                   <li className="app-nav-item" role="presentation">
                     <button
-                      className="app-nav-link active"
+                      className={`app-nav-link ${
+                        tab == "active" ? "active" : ""
+                      }`}
                       id="active-orders-tab"
                       data-bs-toggle="tab"
                       data-bs-target="#ctive-orders"
@@ -707,13 +751,16 @@ function MyRequests() {
                       role="tab"
                       aria-controls="ctive-orders"
                       aria-selected="true"
+                      onClick={() => setTab("active")}
                     >
                       Ativos
                     </button>
                   </li>
                   <li className="app-nav-item" role="presentation">
                     <button
-                      className="app-nav-link"
+                      className={`app-nav-link ${
+                        tab == "previous" ? "active" : ""
+                      }`}
                       id="previous-orders-tab"
                       data-bs-toggle="tab"
                       data-bs-target="#previous-orders"
@@ -721,13 +768,16 @@ function MyRequests() {
                       role="tab"
                       aria-controls="previous-orders"
                       aria-selected="false"
+                      onClick={() => setTab("previous")}
                     >
                       Anteriores
                     </button>
                   </li>
                   <li className="app-nav-item" role="presentation">
                     <button
-                      className="app-nav-link"
+                      className={`app-nav-link ${
+                        tab == "canceled" ? "active" : ""
+                      }`}
                       id="canceled-orders-tab"
                       data-bs-toggle="tab"
                       data-bs-target="#canceled-orders"
@@ -735,265 +785,244 @@ function MyRequests() {
                       role="tab"
                       aria-controls="canceled-orders"
                       aria-selected="false"
+                      onClick={() => setTab("canceled")}
                     >
                       Cancelados
                     </button>
                   </li>
                 </ul>
                 <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="ctive-orders"
-                    role="tabpanel"
-                    aria-labelledby="active-orders-tab"
-                  >
-                    <div className="mb-4">
-                      <div className="border border-success rounded-3 p-4 shadow-lg">
-                        <div className="d-flex">
-                          <img
-                            src="./assets/images/jac-burger.png"
-                            alt=""
-                            width="133"
-                            height="133"
-                            className="me-3 rounded-circle"
-                          />
-                          <div>
-                            <a
-                              href="#order-info-active"
-                              data-bs-toggle="modal"
-                              className="text-black text-decoration-none"
-                              onClick={() => setHidden(false)}
-                            >
-                              <h4 className="mb-2 fw-bold">Pedido #1720745</h4>
-                            </a>
-                            <a
-                              href="#"
-                              className="fs-6 mb-1 link-primary text-decoration-none"
-                            >
-                              Jac burger - São Benedito
-                            </a>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_date_range_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              09/08/2021
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_schedule_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              16:30hrs
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_attach_money_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              R$ 95,50
-                            </p>
+                  {tab == "active" && requestActive.length != 0 ? (
+                    <div>
+                      {requestActive.length != 0 ? (
+                        <div>
+                          <div
+                            className="tab-pane fade show active"
+                            id="ctive-orders"
+                            role="tabpanel"
+                            aria-labelledby="active-orders-tab"
+                          >
+                            {requestActive.map((order) => {
+                              return (
+                                <div className="mb-4">
+                                  <div className="border border-success rounded-3 p-4 shadow-lg">
+                                    <div className="d-flex">
+                                      <img
+                                        src="./assets/images/jac-burger.png" /* modify mock by  "order.icone" */
+                                        alt=""
+                                        width="133"
+                                        height="133"
+                                        className="me-3 rounded-circle"
+                                      />
+                                      <div>
+                                        <a
+                                          href="#order-info-previus"
+                                          data-bs-toggle="modal"
+                                          className="text-black text-decoration-none"
+                                        >
+                                          <h4 className="mb-2 fw-bold">
+                                            Pedido #1720745
+                                          </h4>
+                                        </a>
+                                        <a
+                                          href="#"
+                                          className="fs-6 mb-1 link-primary text-decoration-none"
+                                        >
+                                          Jac burger - São Benedito
+                                        </a>
+                                        <p className="fs-6 mb-1 text-black">
+                                          <img
+                                            src="./assets/images/outline_date_range_black.png"
+                                            alt=""
+                                            width="17"
+                                            height="17"
+                                            className="me-2"
+                                          />
+                                          09/08/2021
+                                        </p>
+                                        <p className="fs-6 mb-1 text-black">
+                                          <img
+                                            src="./assets/images/outline_schedule_black.png"
+                                            alt=""
+                                            width="17"
+                                            height="17"
+                                            className="me-2"
+                                          />
+                                          16:30hrs
+                                        </p>
+                                        <p className="fs-6 mb-1 text-black">
+                                          <img
+                                            src="./assets/images/outline_attach_money_black.png"
+                                            alt=""
+                                            width="17"
+                                            height="17"
+                                            className="me-2"
+                                          />
+                                          R$ 95,50
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
+                  ) : (
+                    ""
+                  )}
 
-                    <div className="mb-4">
-                      <div className="border border-success rounded-3 p-4 shadow-lg">
-                        <div className="d-flex">
-                          <img
-                            src="./assets/images/jac-burger.png"
-                            alt=""
-                            width="133"
-                            height="133"
-                            className="me-3 rounded-circle"
-                          />
-                          <div>
-                            <a
-                              href="#order-info-previus"
-                              data-bs-toggle="modal"
-                              className="text-black text-decoration-none"
-                            >
-                              <h4 className="mb-2 fw-bold">Pedido #1720745</h4>
-                            </a>
-                            <a
-                              href="#"
-                              className="fs-6 mb-1 link-primary text-decoration-none"
-                            >
-                              Jac burger - São Benedito
-                            </a>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_date_range_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              09/08/2021
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_schedule_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              16:30hrs
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_attach_money_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              R$ 95,50
-                            </p>
+                  {tab == "previous" ? (
+                    <div>
+                      {requestPrevious.length != 0 ? (
+                        <div
+                          className="tab-pane fade show active"
+                          id="previous-orders"
+                          role="tabpanel"
+                          aria-labelledby="previous-orders-tab"
+                        >
+                          <div className="mb-4">
+                            <div className="border border-gray-100 rounded-3 p-4">
+                              <div className="d-flex">
+                                <img
+                                  src="./assets/images/jac-burger.png"
+                                  alt=""
+                                  width="133"
+                                  height="133"
+                                  className="me-3 rounded-circle"
+                                />
+                                <div>
+                                  <a
+                                    href="#order-info-previous"
+                                    data-bs-toggle="modal"
+                                    className="text-decoration-none text-black"
+                                  >
+                                    <h4 className="mb-2 fw-bold">
+                                      Pedido #1720745
+                                    </h4>
+                                  </a>
+                                  <a
+                                    href="#order-info-previous"
+                                    data-bs-toggle="modal"
+                                    className="fs-6 mb-1 link-primary text-decoration-none"
+                                  >
+                                    Jac burger - São Benedito
+                                  </a>
+                                  <p className="fs-6 mb-1 text-black">
+                                    <img
+                                      src="./assets/images/outline_date_range_black.png"
+                                      alt=""
+                                      width="17"
+                                      height="17"
+                                      className="me-2"
+                                    />
+                                    09/08/2021
+                                  </p>
+                                  <p className="fs-6 mb-1 text-black">
+                                    <img
+                                      src="./assets/images/outline_schedule_black.png"
+                                      alt=""
+                                      width="17"
+                                      height="17"
+                                      className="me-2"
+                                    />
+                                    16:30hrs
+                                  </p>
+                                  <p className="fs-6 mb-1 text-black">
+                                    <img
+                                      src="./assets/images/outline_attach_money_black.png"
+                                      alt=""
+                                      width="17"
+                                      height="17"
+                                      className="me-2"
+                                    />
+                                    R$ 95,50
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>A lista de pedidos esta vazia</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div>A lista de pedidos está vazia</div>
+                  )}
+
+                  {tab == "canceled" && requestActive.length != 0 ? (
+                    <div
+                      className="tab-pane fade show active"
+                      id="canceled-orders"
+                      role="tabpanel"
+                      aria-labelledby="canceled-orders-tab"
+                    >
+                      <div className="mb-4">
+                        <div className="border border-danger rounded-3 p-4 opacity-25">
+                          <div className="d-flex">
+                            <img
+                              src="./assets/images/jac-burger.png"
+                              alt=""
+                              width="133"
+                              height="133"
+                              className="me-3 rounded-circle"
+                            />
+                            <div>
+                              <a
+                                href="#order-info-canceled"
+                                data-bs-toggle="modal"
+                                className="text-decoration-none text-black"
+                              >
+                                <h4 className="mb-2 fw-bold">
+                                  Pedido #1720745
+                                </h4>
+                              </a>
+                              <p className="fs-6 mb-1 text-primary">
+                                Jac burger - São Benedito
+                              </p>
+                              <p className="fs-6 mb-1 text-black">
+                                <img
+                                  src="./assets/images/outline_date_range_black.png"
+                                  alt=""
+                                  width="17"
+                                  height="17"
+                                  className="me-2"
+                                />
+                                09/08/2021
+                              </p>
+                              <p className="fs-6 mb-1 text-black">
+                                <img
+                                  src="./assets/images/outline_schedule_black.png"
+                                  alt=""
+                                  width="17"
+                                  height="17"
+                                  className="me-2"
+                                />
+                                16:30hrs
+                              </p>
+                              <p className="fs-6 mb-1 text-black">
+                                <img
+                                  src="./assets/images/outline_attach_money_black.png"
+                                  alt=""
+                                  width="17"
+                                  height="17"
+                                  className="me-2"
+                                />
+                                R$ 95,50
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className="tab-pane fade"
-                    id="previous-orders"
-                    role="tabpanel"
-                    aria-labelledby="previous-orders-tab"
-                  >
-                    <div className="mb-4">
-                      <div className="border border-gray-100 rounded-3 p-4">
-                        <div className="d-flex">
-                          <img
-                            src="./assets/images/jac-burger.png"
-                            alt=""
-                            width="133"
-                            height="133"
-                            className="me-3 rounded-circle"
-                          />
-                          <div>
-                            <a
-                              href="#order-info-previous"
-                              data-bs-toggle="modal"
-                              className="text-decoration-none text-black"
-                            >
-                              <h4 className="mb-2 fw-bold">Pedido #1720745</h4>
-                            </a>
-                            <a
-                              href="#order-info-previous"
-                              data-bs-toggle="modal"
-                              className="fs-6 mb-1 link-primary text-decoration-none"
-                            >
-                              Jac burger - São Benedito
-                            </a>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_date_range_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              09/08/2021
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_schedule_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              16:30hrs
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_attach_money_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              R$ 95,50
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="tab-pane fade"
-                    id="canceled-orders"
-                    role="tabpanel"
-                    aria-labelledby="canceled-orders-tab"
-                  >
-                    <div className="mb-4">
-                      <div className="border border-danger rounded-3 p-4 opacity-25">
-                        <div className="d-flex">
-                          <img
-                            src="./assets/images/jac-burger.png"
-                            alt=""
-                            width="133"
-                            height="133"
-                            className="me-3 rounded-circle"
-                          />
-                          <div>
-                            <a
-                              href="#order-info-canceled"
-                              data-bs-toggle="modal"
-                              className="text-decoration-none text-black"
-                            >
-                              <h4 className="mb-2 fw-bold">Pedido #1720745</h4>
-                            </a>
-                            <p className="fs-6 mb-1 text-primary">
-                              Jac burger - São Benedito
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_date_range_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              09/08/2021
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_schedule_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              16:30hrs
-                            </p>
-                            <p className="fs-6 mb-1 text-black">
-                              <img
-                                src="./assets/images/outline_attach_money_black.png"
-                                alt=""
-                                width="17"
-                                height="17"
-                                className="me-2"
-                              />
-                              R$ 95,50
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </form>
             </div>

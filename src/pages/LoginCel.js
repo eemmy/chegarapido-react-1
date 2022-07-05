@@ -1,8 +1,39 @@
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import InputMask from "react-input-mask";
+
+import { apiWithoutToken as api } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
+
+import ConfirmSMS from "../components/modals/ConfirmSMS";
 
 function LoginCel() {
+  const [hidden, setHidden] = useState(true);
+  const [phone, setPhone] = useState();
+  const [code, setCode] = useState();
+
+  const { Login } = useAuth();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    console.log(phone);
+
+    const response = await api.post("/auth/login/phone", { phone });
+
+    console.log(response);
+
+    if (response.error) {
+      alert("Ocorreu um erro durante o login, tente novamente mais tarde");
+      return;
+    }
+
+    setHidden(false);
+  };
+
   return (
-    <div>
+    <div style={{}}>
+      <ConfirmSMS hidden={hidden} closeModal={() => setHidden(true)} setCode={setCode} verifyCodeSMS={() => Login({phone, code}, 'phone')} />
       <div id="login" className="min-vh-100">
         <div className="container">
           <div className="row">
@@ -70,11 +101,23 @@ function LoginCel() {
                         height="30"
                       />
                     </span>
-                    <input
-                      type="tel"
-                      placeholder="(99) 9 9999 9999"
-                      className="form-control form-control-lg rounded-end"
-                    />
+
+                    <InputMask
+                      mask="(99) 9.9999-9999"
+                      name="telefone"
+                      value={phone}
+                      onChange={({ target }) => setPhone(target.value)}
+                    >
+                      {(inputProps) => (
+                        <input
+                          type="tel"
+                          placeholder="(99) 9.9999-9999"
+                          className="form-control form-control-lg rounded-end"
+                          required={true}
+                          {...inputProps}
+                        />
+                      )}
+                    </InputMask>
                   </div>
 
                   <button
@@ -91,15 +134,13 @@ function LoginCel() {
                     bg-black
                     text-white
                   "
+                    onClick={handleSubmit}
                   >
                     Enviar SMS
                   </button>
                 </form>
 
-                <Link
-                  to="/"
-                  className="text-decoration-none text-gray-700"
-                >
+                <Link to="/" className="text-decoration-none text-gray-700">
                   Entrar como convidado
                 </Link>
               </div>
